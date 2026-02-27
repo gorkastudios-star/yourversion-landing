@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YourVersion · Grupo de versiones premium en Bilbao</title>
-    <meta name="description" content="YourVersion: Música en directo premium para bodas, cócteles y eventos corporativos en Bilbao. Pop Rock Español con equipo de sonido propio.">
-    
+    <meta name="description"
+        content="YourVersion: Música en directo premium para bodas, cócteles y eventos corporativos en Bilbao. Pop Rock Español con equipo de sonido propio.">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Outfit:wght@300;500;700;800&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Outfit:wght@300;500;700;800&display=swap"
+        rel="stylesheet">
+
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
     <!-- Sticky Header -->
     <header id="header" class="header">
         <div class="container container--header">
             <a href="#" class="logo">YourVersion</a>
-            
+
             <nav class="nav-desktop">
                 <a href="#video">Ver vídeo</a>
                 <a href="#servicios">Servicios</a>
@@ -52,12 +57,12 @@
             <div class="container hero__content">
                 <h1 class="hero__title">YourVersion · Grupo de versiones <span>premium</span> en Bilbao</h1>
                 <p class="hero__subtitle">Pop Rock Español · Sonido propio · Repertorio a medida</p>
-                
+
                 <div class="hero__ctas">
                     <a href="#presupuesto" class="btn btn--primary">Pedir presupuesto</a>
                     <button id="heroVideoBtn" class="btn btn--secondary">Ver vídeo</button>
                 </div>
-                
+
                 <p class="hero__trust">Respuesta en 24h · Bilbao y alrededores · Sin compromiso</p>
 
                 <div class="hero__mini-cards">
@@ -75,325 +80,355 @@
                     </div>
                 </div>
             </div>
-        </main>
+    </main>
 
-        <!-- Section 2: Video -->
-        <section id="video" class="section video-section" data-reveal>
-            <div class="container">
-                <h2 class="section__title">Un show que se ve y se oye premium</h2>
-                <p class="section__text">Nuestra prioridad es la calidad técnica y la energía sobre el escenario. Profesionales con años de experiencia cuidando cada detalle para que tu evento sea inolvidable.</p>
-                
-                <div class="video-placeholder">
-                    <div class="video-placeholder__overlay">
-                        <p>Pega aquí tu enlace de YouTube/Vimeo</p>
-                        <button class="btn btn--secondary">Abrir vídeo</button>
-                    </div>
-                    <div class="video-placeholder__glow"></div>
+    <!-- Section 2: Video -->
+    <section id="video" class="section video-section" data-reveal>
+        <div class="container">
+            <h2 class="section__title">Un show que se ve y se oye premium</h2>
+            <p class="section__text">Nuestra prioridad es la calidad técnica y la energía sobre el escenario.
+                Profesionales con años de experiencia cuidando cada detalle para que tu evento sea inolvidable.</p>
+
+            <div class="video-container">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/FON-6-GHQe4"
+                    title="YourVersion Showreel" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Services -->
+    <section id="servicios" class="section services-section" data-reveal>
+        <div class="container grid grid--3">
+            <!-- Service A -->
+            <article class="service-card">
+                <div class="service-card__icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </div>
+                <h3>Bodas premium</h3>
+                <ul class="service-card__list">
+                    <li>Cóctel elegante (volumen controlado)</li>
+                    <li>Fiesta con himnos que canta todo el mundo</li>
+                    <li>Opcional: canción especial / entrada novios</li>
+                </ul>
+            </article>
+
+            <!-- Service B -->
+            <article class="service-card">
+                <div class="service-card__icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m19 7-.8 3.3c-.4 1.7-1.5 3.1-3.2 3.7l-.3.1c-1.7.6-2.7 2-2.7 3.9V21" />
+                        <path d="m5 7 .8 3.3c.4 1.7 1.5 3.1 3.2 3.7l.3.1c1.7.6 2.7 2 2.7 3.9V21" />
+                        <path d="M12 3v4" />
+                        <path d="m5 3 2 2" />
+                        <path d="m19 3-2 2" />
+                    </svg>
+                </div>
+                <h3>Cócteles & eventos privados</h3>
+                <ul class="service-card__list">
+                    <li>Ambiente fino + energía si se pide</li>
+                    <li>Setlist adaptado al público</li>
+                </ul>
+            </article>
+
+            <!-- Service C -->
+            <article class="service-card">
+                <div class="service-card__icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                        <rect width="20" height="14" x="2" y="6" rx="2" />
+                    </svg>
+                </div>
+                <h3>Empresa premium</h3>
+                <ul class="service-card__list">
+                    <li>Imagen impecable, puntualidad</li>
+                    <li>Producción completa, sin líos técnicos</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <!-- Section 4: How it works -->
+    <section id="pasos" class="section timeline-section" data-reveal>
+        <div class="container">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-item__number">01</span>
+                    <h4>Cuéntanos tu fecha y formato</h4>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-item__number">02</span>
+                    <h4>Te proponemos repertorio y presupuesto</h4>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-item__number">03</span>
+                    <h4>Montamos sonido y lo dejamos perfecto</h4>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Section 3: Services -->
-        <section id="servicios" class="section services-section" data-reveal>
-            <div class="container grid grid--3">
-                <!-- Service A -->
-                <article class="service-card">
-                    <div class="service-card__icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                    </div>
-                    <h3>Bodas premium</h3>
-                    <ul class="service-card__list">
-                        <li>Cóctel elegante (volumen controlado)</li>
-                        <li>Fiesta con himnos que canta todo el mundo</li>
-                        <li>Opcional: canción especial / entrada novios</li>
-                    </ul>
-                </article>
+    <!-- Section 5: Repertoire -->
+    <section id="repertorio" class="section repertoire-section" data-reveal>
+        <div class="container container--narrow">
+            <h2 class="section__title text-center">Pop Rock Español</h2>
 
-                <!-- Service B -->
-                <article class="service-card">
-                    <div class="service-card__icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m19 7-.8 3.3c-.4 1.7-1.5 3.1-3.2 3.7l-.3.1c-1.7.6-2.7 2-2.7 3.9V21"/><path d="m5 7 .8 3.3c.4 1.7 1.5 3.1 3.2 3.7l.3.1c1.7.6 2.7 2 2.7 3.9V21"/><path d="M12 3v4"/><path d="m5 3 2 2"/><path d="m19 3-2 2"/></svg>
-                    </div>
-                    <h3>Cócteles & eventos privados</h3>
-                    <ul class="service-card__list">
-                        <li>Ambiente fino + energía si se pide</li>
-                        <li>Setlist adaptado al público</li>
-                    </ul>
-                </article>
-
-                <!-- Service C -->
-                <article class="service-card">
-                    <div class="service-card__icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>
-                    </div>
-                    <h3>Empresa premium</h3>
-                    <ul class="service-card__list">
-                        <li>Imagen impecable, puntualidad</li>
-                        <li>Producción completa, sin líos técnicos</li>
-                    </ul>
-                </article>
+            <div class="chips">
+                <span class="chip active">Clásicos</span>
+                <span class="chip">2000s</span>
+                <span class="chip">Actual</span>
+                <span class="chip">Fiesta</span>
             </div>
-        </section>
 
-        <!-- Section 4: How it works -->
-        <section id="pasos" class="section timeline-section" data-reveal>
-            <div class="container">
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <span class="timeline-item__number">01</span>
-                        <h4>Cuéntanos tu fecha y formato</h4>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-item__number">02</span>
-                        <h4>Te proponemos repertorio y presupuesto</h4>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-item__number">03</span>
-                        <h4>Montamos sonido y lo dejamos perfecto</h4>
-                    </div>
-                </div>
+            <div class="songs-grid">
+                <div class="song">Clásico 1</div>
+                <div class="song">Éxito 2000s</div>
+                <div class="song">Himno Pop 1</div>
+                <div class="song">Clásico 2</div>
+                <div class="song">Éxito Actual 1</div>
+                <div class="song">Himno Rock 1</div>
+                <div class="song">Fiesta 1</div>
+                <div class="song">Pop Rock 1</div>
+                <div class="song">Clásico 3</div>
+                <div class="song">Éxito 2000s 2</div>
+                <div class="song">Actual 2</div>
+                <div class="song">Himno Final</div>
             </div>
-        </section>
 
-        <!-- Section 5: Repertoire -->
-        <section id="repertorio" class="section repertoire-section" data-reveal>
-            <div class="container container--narrow">
-                <h2 class="section__title text-center">Pop Rock Español</h2>
-                
-                <div class="chips">
-                    <span class="chip active">Clásicos</span>
-                    <span class="chip">2000s</span>
-                    <span class="chip">Actual</span>
-                    <span class="chip">Fiesta</span>
+            <p class="repertoire-note">¿Tienes una canción imprescindible? La preparamos.</p>
+        </div>
+    </section>
+
+    <!-- Section 6: Reviews -->
+    <section id="reseñas" class="section reviews-section" data-reveal>
+        <div class="container">
+            <div class="grid grid--3">
+                <div class="review-card">
+                    <div class="review-card__header">
+                        <span class="review-card__name">Elena R.</span>
+                        <span class="review-card__event">Boda · Bilbao</span>
+                    </div>
+                    <p>"Increíbles. Hicieron que la fiesta fuera inolvidable. El sonido fue perfecto y los invitados no
+                        pararon de bailar."</p>
                 </div>
-
-                <div class="songs-grid">
-                    <div class="song">Clásico 1</div>
-                    <div class="song">Éxito 2000s</div>
-                    <div class="song">Himno Pop 1</div>
-                    <div class="song">Clásico 2</div>
-                    <div class="song">Éxito Actual 1</div>
-                    <div class="song">Himno Rock 1</div>
-                    <div class="song">Fiesta 1</div>
-                    <div class="song">Pop Rock 1</div>
-                    <div class="song">Clásico 3</div>
-                    <div class="song">Éxito 2000s 2</div>
-                    <div class="song">Actual 2</div>
-                    <div class="song">Himno Final</div>
+                <div class="review-card">
+                    <div class="review-card__header">
+                        <span class="review-card__name">Mikel A.</span>
+                        <span class="review-card__event">Evento Empresa</span>
+                    </div>
+                    <p>"Profesionalidad absoluta. Desde el montaje hasta el show final, YourVersion demostró por qué son
+                        premium."</p>
                 </div>
-
-                <p class="repertoire-note">¿Tienes una canción imprescindible? La preparamos.</p>
-            </div>
-        </section>
-
-        <!-- Section 6: Reviews -->
-        <section id="reseñas" class="section reviews-section" data-reveal>
-            <div class="container">
-                <div class="grid grid--3">
-                    <div class="review-card">
-                        <div class="review-card__header">
-                            <span class="review-card__name">Elena R.</span>
-                            <span class="review-card__event">Boda · Bilbao</span>
-                        </div>
-                        <p>"Increíbles. Hicieron que la fiesta fuera inolvidable. El sonido fue perfecto y los invitados no pararon de bailar."</p>
+                <div class="review-card">
+                    <div class="review-card__header">
+                        <span class="review-card__name">Sara P.</span>
+                        <span class="review-card__event">Cóctel · Getxo</span>
                     </div>
-                    <div class="review-card">
-                        <div class="review-card__header">
-                            <span class="review-card__name">Mikel A.</span>
-                            <span class="review-card__event">Evento Empresa</span>
-                        </div>
-                        <p>"Profesionalidad absoluta. Desde el montaje hasta el show final, YourVersion demostró por qué son premium."</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-card__header">
-                            <span class="review-card__name">Sara P.</span>
-                            <span class="review-card__event">Cóctel · Getxo</span>
-                        </div>
-                        <p>"El ambiente que crearon durante el cóctel fue mágico. Volumen ideal y selección musical inmejorable."</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-card__header">
-                            <span class="review-card__name">Jon G.</span>
-                            <span class="review-card__event">Fiesta Privada</span>
-                        </div>
-                        <p>"Un repertorio que todo el mundo conoce. La mejor decisión para nuestra fiesta de aniversario."</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-card__header">
-                            <span class="review-card__name">Lucía M.</span>
-                            <span class="review-card__event">Boda · Vitoria</span>
-                        </div>
-                        <p>"Nos ayudaron con todo el sonido de la ceremonia y luego el directo fue espectacular. 10/10."</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-card__header">
-                            <span class="review-card__name">Pablo S.</span>
-                            <span class="review-card__event">Gala Benéfica</span>
-                        </div>
-                        <p>"Elegantes y con mucha energía. Adaptaron el repertorio perfectamente al tono de la gala."</p>
-                    </div>
+                    <p>"El ambiente que crearon durante el cóctel fue mágico. Volumen ideal y selección musical
+                        inmejorable."</p>
                 </div>
-
-                <div class="trusted-by">
-                    <div class="trusted-logo"></div>
-                    <div class="trusted-logo"></div>
-                    <div class="trusted-logo"></div>
-                    <div class="trusted-logo"></div>
+                <div class="review-card">
+                    <div class="review-card__header">
+                        <span class="review-card__name">Jon G.</span>
+                        <span class="review-card__event">Fiesta Privada</span>
+                    </div>
+                    <p>"Un repertorio que todo el mundo conoce. La mejor decisión para nuestra fiesta de aniversario."
+                    </p>
+                </div>
+                <div class="review-card">
+                    <div class="review-card__header">
+                        <span class="review-card__name">Lucía M.</span>
+                        <span class="review-card__event">Boda · Vitoria</span>
+                    </div>
+                    <p>"Nos ayudaron con todo el sonido de la ceremonia y luego el directo fue espectacular. 10/10."</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-card__header">
+                        <span class="review-card__name">Pablo S.</span>
+                        <span class="review-card__event">Gala Benéfica</span>
+                    </div>
+                    <p>"Elegantes y con mucha energía. Adaptaron el repertorio perfectamente al tono de la gala."</p>
                 </div>
             </div>
-        </section>
 
-        <!-- Section 7: Quote Form -->
-        <section id="presupuesto" class="section form-section" data-reveal>
-            <div class="container container--narrow">
-                <div class="form-panel">
-                    <h2 class="form-panel__title">Pedir presupuesto</h2>
-                    <p class="form-panel__subtitle">Cuéntanos tu idea y te responderemos en menos de 24h.</p>
-                    
-                    <form id="quoteForm" class="quote-form">
-                        <!-- Honeypot -->
-                        <div style="display:none;">
-                            <input type="text" name="b_website" tabindex="-1" value="">
-                        </div>
+            <div class="trusted-by">
+                <div class="trusted-logo"></div>
+                <div class="trusted-logo"></div>
+                <div class="trusted-logo"></div>
+                <div class="trusted-logo"></div>
+            </div>
+        </div>
+    </section>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="nombre">Nombre*</label>
-                                <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email*</label>
-                                <input type="email" id="email" name="email" required placeholder="tu@email.com">
-                            </div>
-                        </div>
+    <!-- Section 7: Quote Form -->
+    <section id="presupuesto" class="section form-section" data-reveal>
+        <div class="container container--narrow">
+            <div class="form-panel">
+                <h2 class="form-panel__title">Pedir presupuesto</h2>
+                <p class="form-panel__subtitle">Cuéntanos tu idea y te responderemos en menos de 24h.</p>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="telefono">Teléfono</label>
-                                <input type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000">
-                            </div>
-                            <div class="form-group">
-                                <label for="fecha">Fecha del evento*</label>
-                                <input type="date" id="fecha" name="fecha" required>
-                            </div>
-                        </div>
+                <form id="quoteForm" class="quote-form">
+                    <!-- Honeypot -->
+                    <div style="display:none;">
+                        <input type="text" name="b_website" tabindex="-1" value="">
+                    </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="tipo">Tipo de evento*</label>
-                                <select id="tipo" name="tipo" required>
-                                    <option value="" disabled selected>Selecciona una opción</option>
-                                    <option value="Boda">Boda</option>
-                                    <option value="Cóctel">Cóctel</option>
-                                    <option value="Empresa">Evento Empresa</option>
-                                    <option value="Privado">Fiesta Privada</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="lugar">Lugar/Localidad*</label>
-                                <input type="text" id="lugar" name="lugar" required placeholder="Ej: Bilbao, Caserío...">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="invitados">Nº Invitados</label>
-                                <input type="number" id="invitados" name="invitados" placeholder="Aprox.">
-                            </div>
-                            <div class="form-group">
-                                <label for="duracion">Duración del show</label>
-                                <select id="duracion" name="duracion">
-                                    <option value="60">60 min</option>
-                                    <option value="90" selected>90 min</option>
-                                    <option value="120">120 min</option>
-                                </select>
-                            </div>
-                        </div>
-
+                    <div class="form-row">
                         <div class="form-group">
-                            <label>Formato deseado</label>
-                            <div class="checkbox-group">
-                                <label class="checkbox-container">
-                                    <input type="checkbox" name="formato" value="Cóctel">
-                                    <span class="checkmark"></span>
-                                    Cóctel
-                                </label>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" name="formato" value="Fiesta">
-                                    <span class="checkmark"></span>
-                                    Fiesta
-                                </label>
-                            </div>
+                            <label for="nombre">Nombre*</label>
+                            <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre">
                         </div>
-
                         <div class="form-group">
-                            <label for="equipo">¿El lugar tiene equipo de sonido?</label>
-                            <select id="equipo" name="equipo">
-                                <option value="No lo sé">No lo sé</option>
-                                <option value="Sí">Sí</option>
-                                <option value="No">No</option>
+                            <label for="email">Email*</label>
+                            <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000">
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha">Fecha del evento*</label>
+                            <input type="date" id="fecha" name="fecha" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tipo">Tipo de evento*</label>
+                            <select id="tipo" name="tipo" required>
+                                <option value="" disabled selected>Selecciona una opción</option>
+                                <option value="Boda">Boda</option>
+                                <option value="Cóctel">Cóctel</option>
+                                <option value="Empresa">Evento Empresa</option>
+                                <option value="Privado">Fiesta Privada</option>
                             </select>
                         </div>
-
                         <div class="form-group">
-                            <label for="comentarios">Comentarios</label>
-                            <textarea id="comentarios" name="comentarios" rows="4" placeholder="Algún detalle extra..."></textarea>
+                            <label for="lugar">Lugar/Localidad*</label>
+                            <input type="text" id="lugar" name="lugar" required placeholder="Ej: Bilbao, Caserío...">
                         </div>
+                    </div>
 
-                        <button type="submit" class="btn btn--primary btn--full">Quiero presupuesto</button>
-                    </form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="invitados">Nº Invitados</label>
+                            <input type="number" id="invitados" name="invitados" placeholder="Aprox.">
+                        </div>
+                        <div class="form-group">
+                            <label for="duracion">Duración del show</label>
+                            <select id="duracion" name="duracion">
+                                <option value="60">60 min</option>
+                                <option value="90" selected>90 min</option>
+                                <option value="120">120 min</option>
+                            </select>
+                        </div>
+                    </div>
 
-                    <!-- Success State -->
-                    <div id="successState" class="success-state" style="display: none;">
-                        <div class="success-state__icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c5a059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <div class="form-group">
+                        <label>Formato deseado</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="formato" value="Cóctel">
+                                <span class="checkmark"></span>
+                                Cóctel
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="formato" value="Fiesta">
+                                <span class="checkmark"></span>
+                                Fiesta
+                            </label>
                         </div>
-                        <h3>¡Solicitud recibida!</h3>
-                        <p>Hemos generado un resumen de tu solicitud. Puedes copiarlo o enviarlo por email directamente.</p>
-                        
-                        <div class="summary-box" id="summaryBox"></div>
-                        
-                        <div class="success-state__actions">
-                            <button id="copyBtn" class="btn btn--secondary">Copiar resumen</button>
-                            <a id="emailBtn" href="#" class="btn btn--primary">Enviar por email</a>
-                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="equipo">¿El lugar tiene equipo de sonido?</label>
+                        <select id="equipo" name="equipo">
+                            <option value="No lo sé">No lo sé</option>
+                            <option value="Sí">Sí</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comentarios">Comentarios</label>
+                        <textarea id="comentarios" name="comentarios" rows="4"
+                            placeholder="Algún detalle extra..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--full">Quiero presupuesto</button>
+                </form>
+
+                <!-- Success State -->
+                <div id="successState" class="success-state" style="display: none;">
+                    <div class="success-state__icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c5a059" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <h3>¡Solicitud recibida!</h3>
+                    <p>Hemos generado un resumen de tu solicitud. Puedes copiarlo o enviarlo por email directamente.</p>
+
+                    <div class="summary-box" id="summaryBox"></div>
+
+                    <div class="success-state__actions">
+                        <button id="copyBtn" class="btn btn--secondary">Copiar resumen</button>
+                        <a id="emailBtn" href="#" class="btn btn--primary">Enviar por email</a>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Section 8: FAQ -->
-        <section id="faq" class="section faq-section" data-reveal>
-            <div class="container container--narrow">
-                <h2 class="section__title text-center">Preguntas frecuentes</h2>
-                <div class="accordion">
-                    <details class="accordion__item">
-                        <summary>¿En qué zona trabajáis?</summary>
-                        <p>Trabajamos principalmente en Bilbao, Bizkaia y todo el País Vasco, aunque nos desplazamos si el evento lo requiere.</p>
-                    </details>
-                    <details class="accordion__item">
-                        <summary>¿Incluís sonido?</summary>
-                        <p>Sí, disponemos de equipo de sonido (PA) propio de alta gama para adaptarnos a diferentes espacios y aforos.</p>
-                    </details>
-                    <details class="accordion__item">
-                        <summary>¿Se puede pedir repertorio a medida?</summary>
-                        <p>Totalmente. Tenemos un setlist base de Pop Rock Español, pero podemos preparar canciones especiales si nos avisas con tiempo.</p>
-                    </details>
-                    <details class="accordion__item">
-                        <summary>¿Cuánto dura el show?</summary>
-                        <p>Solemos ofrecer pases de 60, 90 o 120 minutos, siempre adaptándonos al ritmo de tu evento.</p>
-                    </details>
-                    <details class="accordion__item">
-                        <summary>¿Cómo se reserva la fecha?</summary>
-                        <p>Una vez aceptado el presupuesto, se realiza una pequeña señal para bloquear la fecha en nuestro calendario.</p>
-                    </details>
-                    <details class="accordion__item">
-                        <summary>¿Cuánto tardáis en responder?</summary>
-                        <p>Nuestro compromiso es responderte con un presupuesto detallado en menos de 24 horas laborables.</p>
-                    </details>
-                </div>
+    <!-- Section 8: FAQ -->
+    <section id="faq" class="section faq-section" data-reveal>
+        <div class="container container--narrow">
+            <h2 class="section__title text-center">Preguntas frecuentes</h2>
+            <div class="accordion">
+                <details class="accordion__item">
+                    <summary>¿En qué zona trabajáis?</summary>
+                    <p>Trabajamos principalmente en Bilbao, Bizkaia y todo el País Vasco, aunque nos desplazamos si el
+                        evento lo requiere.</p>
+                </details>
+                <details class="accordion__item">
+                    <summary>¿Incluís sonido?</summary>
+                    <p>Sí, disponemos de equipo de sonido (PA) propio de alta gama para adaptarnos a diferentes espacios
+                        y aforos.</p>
+                </details>
+                <details class="accordion__item">
+                    <summary>¿Se puede pedir repertorio a medida?</summary>
+                    <p>Totalmente. Tenemos un setlist base de Pop Rock Español, pero podemos preparar canciones
+                        especiales si nos avisas con tiempo.</p>
+                </details>
+                <details class="accordion__item">
+                    <summary>¿Cuánto dura el show?</summary>
+                    <p>Solemos ofrecer pases de 60, 90 o 120 minutos, siempre adaptándonos al ritmo de tu evento.</p>
+                </details>
+                <details class="accordion__item">
+                    <summary>¿Cómo se reserva la fecha?</summary>
+                    <p>Una vez aceptado el presupuesto, se realiza una pequeña señal para bloquear la fecha en nuestro
+                        calendario.</p>
+                </details>
+                <details class="accordion__item">
+                    <summary>¿Cuánto tardáis en responder?</summary>
+                    <p>Nuestro compromiso es responderte con un presupuesto detallado en menos de 24 horas laborables.
+                    </p>
+                </details>
             </div>
-        </section>
+        </div>
+    </section>
     </main>
 
     <!-- Footer -->
@@ -406,8 +441,10 @@
             <div class="footer__contact">
                 <a href="mailto:hola@yourversion.band">hola@yourversion.band</a>
                 <div class="footer__social">
-                    <a href="#" target="_blank" aria-label="Instagram">IG</a>
-                    <a href="#" target="_blank" aria-label="WhatsApp">WA</a>
+                    <a href="https://www.instagram.com/yourversionbilbao/" target="_blank"
+                        aria-label="Instagram">Instagram</a>
+                    <a href="https://www.musiqua.es/band/grupo-de-versiones-eventos-y-bodas-27216?fs=1" target="_blank"
+                        aria-label="Musiqua">Musiqua</a>
                 </div>
             </div>
         </div>
@@ -418,4 +455,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
