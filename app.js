@@ -4,27 +4,53 @@
 */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initStickyHeader();
-    initMobileMenu();
+    initLuxuryBackground();
     initScrollReveal();
     initSmoothScroll();
     initFormHandling();
 });
 
 /**
- * Sticky Header with blur/shadow on scroll
+ * Luxury Floating Particles Effect
  */
-function initStickyHeader() {
-    const header = document.getElementById('header');
-    const scrollThreshold = 50;
+function initLuxuryBackground() {
+    const container = document.getElementById('particles');
+    if (!container) return;
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > scrollThreshold) {
-            header.classList.add('header--scrolled');
-        } else {
-            header.classList.remove('header--scrolled');
+    const particleCount = 25;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+
+        const size = Math.random() * 3 + 1;
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        const delay = Math.random() * 20;
+        const duration = Math.random() * 20 + 10;
+
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        particle.style.animation = `float ${duration}s linear infinite`;
+        particle.style.animationDelay = `-${delay}s`;
+        particle.style.opacity = Math.random() * 0.4;
+
+        container.appendChild(particle);
+    }
+
+    // Add CSS Animation dynamically if needed, or in styles.css
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
         }
-    });
+    `;
+    document.head.appendChild(style);
 }
 
 /**
