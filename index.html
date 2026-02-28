@@ -22,41 +22,14 @@
 <body>
 
     <!-- Luxury Animated Background Canvas/Overlay -->
-    <div class="luxury-bg">
-        <div class="luxury-bg__gradient"></div>
-        <div class="luxury-bg__particles" id="particles"></div>
-    </div>
+    <div class="luxury-bg"></div>
 
     <main>
         <!-- Section 1: Hero -->
-        <section id="hero" class="hero">
-            <div class="hero__grain"></div>
-            <div class="hero__light-streak"></div>
+        <section id="hero" class="hero hero--centered">
             <div class="container hero__content">
-                <h1 class="hero__title">YourVersion · Grupo de versiones <span>premium</span> en Bilbao</h1>
-                <p class="hero__subtitle">Pop Rock Español · Sonido propio · Repertorio a medida</p>
-
-                <div class="hero__ctas">
-                    <a href="#presupuesto" class="btn btn--primary">Pedir presupuesto</a>
-                    <button id="heroVideoBtn" class="btn btn--secondary">Ver vídeo</button>
-                </div>
-
-                <p class="hero__trust">Respuesta en 24h · Bilbao y alrededores · Sin compromiso</p>
-
-                <div class="hero__mini-cards">
-                    <div class="mini-card active" data-reveal>
-                        <span class="mini-card__label">Estilo</span>
-                        <span class="mini-card__value">Pop Rock Español</span>
-                    </div>
-                    <div class="mini-card" data-reveal>
-                        <span class="mini-card__label">Equipamiento</span>
-                        <span class="mini-card__value">Sonido propio</span>
-                    </div>
-                    <div class="mini-card" data-reveal>
-                        <span class="mini-card__label">Nivel</span>
-                        <span class="mini-card__value">Enfoque premium</span>
-                    </div>
-                </div>
+                <h1 class="hero__title hero__title--big">YourVersion</h1>
+                <p class="hero__subtitle hero__subtitle--center">Grupo de versiones premium</p>
             </div>
     </main>
 
@@ -160,25 +133,23 @@
             <h2 class="section__title text-center">Pop Rock Español</h2>
 
             <div class="chips">
-                <span class="chip active">Clásicos</span>
-                <span class="chip">2000s</span>
-                <span class="chip">Actual</span>
-                <span class="chip">Fiesta</span>
+                <button class="chip active" type="button" data-genre="clasicos">Clásicos</button>
+                <button class="chip" type="button" data-genre="dosmiles">2000s</button>
+                <button class="chip" type="button" data-genre="actual">Actual</button>
+                <button class="chip" type="button" data-genre="fiesta">Fiesta</button>
             </div>
 
-            <div class="songs-grid">
-                <div class="song">Clásico 1</div>
-                <div class="song">Éxito 2000s</div>
-                <div class="song">Himno Pop 1</div>
-                <div class="song">Clásico 2</div>
-                <div class="song">Éxito Actual 1</div>
-                <div class="song">Himno Rock 1</div>
-                <div class="song">Fiesta 1</div>
-                <div class="song">Pop Rock 1</div>
-                <div class="song">Clásico 3</div>
-                <div class="song">Éxito 2000s 2</div>
-                <div class="song">Actual 2</div>
-                <div class="song">Himno Final</div>
+            <div id="songsGrid" class="songs-grid" aria-live="polite"></div>
+
+            <div class="setlist-builder">
+                <div class="setlist-builder__header">
+                    <p id="selectedSongsCount" class="setlist-builder__count">0 canciones seleccionadas</p>
+                    <button id="clearSetlistBtn" type="button" class="setlist-builder__clear">Limpiar</button>
+                </div>
+                <div id="selectedSongsList" class="selected-songs">
+                    <span class="selected-songs__empty">Selecciona canciones y te preparamos un set a medida.</span>
+                </div>
+                <a id="sendSetBtn" href="#presupuesto" class="btn btn--primary setlist-builder__cta is-disabled" aria-disabled="true">Enviar este repertorio</a>
             </div>
 
             <p class="repertoire-note">¿Tienes una canción imprescindible? La preparamos.</p>
@@ -339,9 +310,100 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="needsSoundProduction" name="needsSoundProduction" value="Sí">
+                            <span class="checkmark"></span>
+                            Necesito que YourVersion sonorice el evento
+                        </label>
+                        <p class="form-note">Cuanta más info nos des, más preciso será el presupuesto técnico.</p>
+                    </div>
+
+                    <div id="soundRequirements" class="conditional-panel is-hidden" aria-hidden="true">
+                        <h3 class="conditional-panel__title">Producción técnica (solo si sonorizamos)</h3>
+                        <p class="conditional-panel__subtitle">Comparte los datos técnicos de sonido e iluminación para ajustar el presupuesto.</p>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spaceType">Espacio (interior/exterior)</label>
+                                <select id="spaceType" name="spaceType" data-conditional>
+                                    <option value="">Selecciona</option>
+                                    <option value="Interior">Interior</option>
+                                    <option value="Exterior">Exterior</option>
+                                    <option value="Mixto">Mixto</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="spaceSize">Tamaño del espacio</label>
+                                <input type="text" id="spaceSize" name="spaceSize" data-conditional placeholder="Ej: 120 m² / jardín grande / salón 20x10m">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="audienceExpected">Público esperado</label>
+                                <input type="number" id="audienceExpected" name="audienceExpected" data-conditional placeholder="Ej: 180 personas">
+                            </div>
+                            <div class="form-group">
+                                <label for="stageSize">Tamaño del escenario</label>
+                                <input type="text" id="stageSize" name="stageSize" data-conditional placeholder="Ej: 6x4m / no hay escenario">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="desiredPower">Potencia de sonido deseada</label>
+                                <input type="text" id="desiredPower" name="desiredPower" data-conditional placeholder="Ej: cobertura suave / presión alta / no definido">
+                            </div>
+                            <div class="form-group">
+                                <label for="powerDistance">Distancia a toma de corriente</label>
+                                <input type="text" id="powerDistance" name="powerDistance" data-conditional placeholder="Ej: 15m aprox.">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="maxPower">Potencia máxima soportada</label>
+                                <input type="text" id="maxPower" name="maxPower" data-conditional placeholder="Ej: 3.500W / 16A por línea">
+                            </div>
+                            <div class="form-group">
+                                <label for="lightingType">Tipo de iluminación</label>
+                                <select id="lightingType" name="lightingType" data-conditional>
+                                    <option value="">Selecciona</option>
+                                    <option value="Ambiente suave">Ambiente suave</option>
+                                    <option value="Concierto dinámico">Concierto dinámico</option>
+                                    <option value="Elegante corporativo">Elegante corporativo</option>
+                                    <option value="No necesitamos luces">No necesitamos luces</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="lightingControl">Control de luces</label>
+                                <select id="lightingControl" name="lightingControl" data-conditional>
+                                    <option value="">Selecciona</option>
+                                    <option value="Presets automáticos">Presets automáticos</option>
+                                    <option value="Necesitamos técnico de luces">Necesitamos técnico de luces</option>
+                                    <option value="No aplica">No aplica</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="riderInfo">Rider / requisitos técnicos</label>
+                                <input type="text" id="riderInfo" name="riderInfo" data-conditional placeholder="Ej: limitador, horario de carga, acceso...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label for="comentarios">Comentarios</label>
                         <textarea id="comentarios" name="comentarios" rows="4"
                             placeholder="Algún detalle extra..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="repertorioSeleccionado">Repertorio elegido en la web</label>
+                        <textarea id="repertorioSeleccionado" name="repertorioSeleccionado" rows="4" readonly
+                            placeholder="Selecciona canciones en la sección Pop Rock Español para incluirlas aquí automáticamente."></textarea>
                     </div>
 
                     <button type="submit" class="btn btn--primary btn--full">Quiero presupuesto</button>

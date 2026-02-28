@@ -1,76 +1,95 @@
 /*
     YourVersion Landing Page Interactions
-    Features: Sticky Header, Mobile Menu, Scroll Reveals, Form Handling
+    Features: Luxury Background, Scroll Reveals, Form Handling
 */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initLuxuryBackground();
+    initHeroEntrance();
     initScrollReveal();
     initSmoothScroll();
+    initRepertoireSection();
     initFormHandling();
 });
 
+function initHeroEntrance() {
+    const hero = document.getElementById('hero');
+    if (!hero) return;
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            hero.classList.add('is-ready');
+        });
+    });
+}
+
 /**
- * Luxury Floating Particles Effect
+ * Luxury Diamond Dust Effect
  */
 function initLuxuryBackground() {
     const container = document.getElementById('particles');
+    const luxuryBg = document.querySelector('.luxury-bg');
     if (!container) return;
 
-    const particleCount = 25;
+    const particleCount = 14;
+    const particlePalette = [
+        'rgba(255,255,255,0.72)',
+        'rgba(232,236,241,0.6)',
+        'rgba(212,220,229,0.48)'
+    ];
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
 
-        const size = Math.random() * 3 + 1;
+        const size = Math.random() * 2.6 + 0.8;
         const posX = Math.random() * 100;
         const posY = Math.random() * 100;
-        const delay = Math.random() * 20;
-        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 16;
+        const duration = Math.random() * 14 + 10;
 
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         particle.style.left = `${posX}%`;
         particle.style.top = `${posY}%`;
-        particle.style.animation = `float ${duration}s linear infinite`;
+        particle.style.animation = `diamondDust ${duration}s ease-in-out infinite`;
         particle.style.animationDelay = `-${delay}s`;
-        particle.style.opacity = Math.random() * 0.4;
+        particle.style.opacity = `${Math.random() * 0.22 + 0.04}`;
+        particle.style.background = particlePalette[Math.floor(Math.random() * particlePalette.length)];
 
         container.appendChild(particle);
     }
 
-    // Add CSS Animation dynamically if needed, or in styles.css
+    // Add CSS animation dynamically
     const style = document.createElement('style');
     style.innerHTML = `
-        @keyframes float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
-            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        @keyframes diamondDust {
+            0%, 100% { transform: scale(0.85); opacity: 0.02; }
+            22% { opacity: 0.16; }
+            48% { transform: scale(1.2); opacity: 0.34; }
+            72% { opacity: 0.12; }
         }
     `;
     document.head.appendChild(style);
-}
 
-/**
- * Mobile sidebar menu
- */
-function initMobileMenu() {
-    const toggle = document.getElementById('menuToggle');
-    const nav = document.getElementById('navMobile');
-    const links = nav.querySelectorAll('a');
+    if (!luxuryBg || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const toggleMenu = () => {
-        nav.classList.toggle('nav-mobile--active');
-        document.body.style.overflow = nav.classList.contains('nav-mobile--active') ? 'hidden' : '';
+    let rafId = null;
+    let targetX = 50;
+    let targetY = 50;
+
+    const applyMouseGlow = () => {
+        luxuryBg.style.setProperty('--mx', `${targetX}%`);
+        luxuryBg.style.setProperty('--my', `${targetY}%`);
+        rafId = null;
     };
 
-    toggle.addEventListener('click', toggleMenu);
-
-    links.forEach(link => {
-        link.addEventListener('click', toggleMenu);
-    });
+    window.addEventListener('mousemove', (event) => {
+        targetX = (event.clientX / window.innerWidth) * 100;
+        targetY = (event.clientY / window.innerHeight) * 100;
+        if (!rafId) {
+            rafId = requestAnimationFrame(applyMouseGlow);
+        }
+    }, { passive: true });
 }
 
 /**
@@ -106,7 +125,7 @@ function initSmoothScroll() {
             e.preventDefault();
             const target = document.querySelector(href);
             if (target) {
-                const headerOffset = 80;
+                const headerOffset = 0;
                 const elementPosition = target.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -117,17 +136,109 @@ function initSmoothScroll() {
             }
         });
     });
+}
 
-    // Special case for CTA button "Ver vídeo"
-    const heroVideoBtn = document.getElementById('heroVideoBtn');
-    if (heroVideoBtn) {
-        heroVideoBtn.addEventListener('click', () => {
-            const videoSection = document.getElementById('video');
-            if (videoSection) {
-                videoSection.scrollIntoView({ behavior: 'smooth' });
-            }
+/**
+ * Repertoire filter chips + dynamic list
+ */
+function initRepertoireSection() {
+    const chips = document.querySelectorAll('.chip[data-genre]');
+    const songsGrid = document.getElementById('songsGrid');
+    const selectedSongsCount = document.getElementById('selectedSongsCount');
+    const selectedSongsList = document.getElementById('selectedSongsList');
+    const sendSetBtn = document.getElementById('sendSetBtn');
+    const clearSetlistBtn = document.getElementById('clearSetlistBtn');
+    const selectedSongsField = document.getElementById('repertorioSeleccionado');
+
+    if (!chips.length || !songsGrid) return;
+
+    const repertoire = {
+        clasicos: ['La Chica de Ayer', 'Lobo Hombre en París', 'Déjame', 'Bienvenidos', 'En Blanco y Negro', 'Escuela de Calor'],
+        dosmiles: ['Corazón Partío', 'Rosas', 'A Dios le Pido', 'Que la Detengan', 'Por la Boca Vive el Pez', 'Lady Madrid'],
+        actual: ['La Flaca (versión actual)', 'Bailar Pegados', 'Universos Infinitos', 'Un Beso y Una Flor (new vibe)', 'Lo Que Construimos', 'Cuando Te Vi'],
+        fiesta: ['Paquito el Chocolatero Pop', 'Mediterráneo Upbeat', 'Himno Final', 'Mix Verbena Rock', 'No Dudaría Fiesta', 'Insurrección Final']
+    };
+
+    const selectedSongs = new Set();
+
+    const syncSelectedSongs = () => {
+        const selectedList = Array.from(selectedSongs);
+        const hasSongs = selectedList.length > 0;
+
+        if (selectedSongsCount) {
+            selectedSongsCount.textContent = `${selectedList.length} canción${selectedList.length === 1 ? '' : 'es'} seleccionada${selectedList.length === 1 ? '' : 's'}`;
+        }
+
+        if (selectedSongsList) {
+            selectedSongsList.innerHTML = hasSongs
+                ? selectedList.map((song) => `<span class="selected-song">${song}</span>`).join('')
+                : '<span class="selected-songs__empty">Selecciona canciones y te preparamos un set a medida.</span>';
+        }
+
+        if (sendSetBtn) {
+            sendSetBtn.classList.toggle('is-disabled', !hasSongs);
+            sendSetBtn.setAttribute('aria-disabled', String(!hasSongs));
+        }
+
+        if (selectedSongsField) {
+            selectedSongsField.value = hasSongs
+                ? selectedList.join('\n')
+                : '';
+        }
+    };
+
+    const renderSongs = (genre) => {
+        const songs = repertoire[genre] || [];
+        songsGrid.classList.add('is-updating');
+
+        setTimeout(() => {
+            songsGrid.innerHTML = songs
+                .map((title) => {
+                    const selectedClass = selectedSongs.has(title) ? ' song--selected' : '';
+                    return `<button type="button" class="song${selectedClass}" data-title="${title}">${title}</button>`;
+                })
+                .join('');
+
+            songsGrid.classList.remove('is-updating');
+        }, 120);
+    };
+
+    songsGrid.addEventListener('click', (event) => {
+        const song = event.target.closest('.song[data-title]');
+        if (!song) return;
+
+        const title = song.dataset.title;
+
+        if (selectedSongs.has(title)) {
+            selectedSongs.delete(title);
+            song.classList.remove('song--selected');
+        } else {
+            selectedSongs.add(title);
+            song.classList.add('song--selected');
+        }
+
+        syncSelectedSongs();
+    });
+
+    if (clearSetlistBtn) {
+        clearSetlistBtn.addEventListener('click', () => {
+            selectedSongs.clear();
+            const activeChip = document.querySelector('.chip[data-genre].active');
+            renderSongs(activeChip ? activeChip.dataset.genre : 'clasicos');
+            syncSelectedSongs();
         });
     }
+
+    chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+            chips.forEach((item) => item.classList.remove('active'));
+            chip.classList.add('active');
+            renderSongs(chip.dataset.genre);
+        });
+    });
+
+    renderSongs('clasicos');
+    syncSelectedSongs();
 }
 
 /**
@@ -139,8 +250,35 @@ function initFormHandling() {
     const summaryBox = document.getElementById('summaryBox');
     const copyBtn = document.getElementById('copyBtn');
     const emailBtn = document.getElementById('emailBtn');
+    const soundToggle = document.getElementById('needsSoundProduction');
+    const soundRequirements = document.getElementById('soundRequirements');
+    const conditionalFields = form ? form.querySelectorAll('[data-conditional]') : [];
 
     if (!form) return;
+
+    const toggleSoundRequirements = () => {
+        const isActive = soundToggle?.checked;
+
+        if (!soundRequirements) return;
+
+        soundRequirements.classList.toggle('is-hidden', !isActive);
+        soundRequirements.setAttribute('aria-hidden', String(!isActive));
+
+        if (!isActive) {
+            conditionalFields.forEach((field) => {
+                if (field.tagName === 'SELECT') {
+                    field.selectedIndex = 0;
+                } else {
+                    field.value = '';
+                }
+            });
+        }
+    };
+
+    if (soundToggle && soundRequirements) {
+        soundToggle.addEventListener('change', toggleSoundRequirements);
+        toggleSoundRequirements();
+    }
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -156,6 +294,7 @@ function initFormHandling() {
         // Handle multi-checkbox for "formato"
         const formatos = formData.getAll('formato');
         data.formato = formatos.length > 0 ? formatos.join(' + ') : 'No especificado';
+        data.needsSoundProduction = soundToggle?.checked ? 'Sí' : 'No';
 
         // Generate Summary
         const summaryText = generateSummary(data);
@@ -182,6 +321,22 @@ function initFormHandling() {
 }
 
 function generateSummary(data) {
+    const technicalSection = data.needsSoundProduction === 'Sí'
+        ? `
+
+PRODUCCIÓN TÉCNICA (SONIDO / LUCES):
+- Espacio: ${data.spaceType || 'No especificado'}
+- Tamaño del espacio: ${data.spaceSize || 'No especificado'}
+- Público esperado: ${data.audienceExpected || 'No especificado'}
+- Tamaño del escenario: ${data.stageSize || 'No especificado'}
+- Rider / requisitos técnicos: ${data.riderInfo || 'No especificado'}
+- Potencia de sonido deseada: ${data.desiredPower || 'No especificado'}
+- Distancia a toma de corriente: ${data.powerDistance || 'No especificado'}
+- Potencia máxima soportada: ${data.maxPower || 'No especificado'}
+- Tipo de iluminación: ${data.lightingType || 'No especificado'}
+- Control de luces: ${data.lightingControl || 'No especificado'}`
+        : '\n\nPRODUCCIÓN TÉCNICA (SONIDO / LUCES):\n- No necesitan que sonoricemos el evento.';
+
     return `SOLICITUD DE PRESUPUESTO - YOURVERSION
 
 CLIENTE: ${data.nombre}
@@ -196,6 +351,8 @@ DETALLES DEL EVENTO:
 - Duración: ${data.duracion} min
 - Formato: ${data.formato}
 - Equipo en el local: ${data.equipo}
+- Repertorio solicitado:\n${data.repertorioSeleccionado || 'No especificado'}
+- ¿Necesitan sonorización?: ${data.needsSoundProduction}${technicalSection}
 
 COMENTARIOS ADICIONALES:
 ${data.comentarios || 'Sin comentarios adicionales.'}
