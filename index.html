@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YourVersion · Grupo de versiones premium en Bilbao</title>
+    <title>YourVersion · Grupo premium de versiones en Bilbao</title>
     <meta name="description"
         content="YourVersion: Música en directo premium para bodas, cócteles y eventos corporativos en Bilbao. Pop Rock Español con equipo de sonido propio.">
 
@@ -23,13 +23,14 @@
 
     <!-- Luxury Animated Background Canvas/Overlay -->
     <div class="luxury-bg"></div>
+    <canvas id="particles-bg" style="position:fixed;inset:0;z-index:-2;pointer-events:none;"></canvas>
 
     <main>
         <!-- Section 1: Hero -->
         <section id="hero" class="hero hero--centered">
             <div class="container hero__content">
                 <h1 class="hero__title hero__title--big">YourVersion</h1>
-                <p class="hero__subtitle hero__subtitle--center">Grupo de versiones premium</p>
+                <p class="hero__subtitle hero__subtitle--center">Grupo premium de versiones </p>
             </div>
     </main>
 
@@ -47,6 +48,15 @@
                     allowfullscreen>
                 </iframe>
             </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Set List -->
+    <section id="repertorio" class="section repertoire-section" data-reveal>
+        <div class="container">
+            <h2 class="section__title text-center" style="font-family: var(--font-main); color: var(--brass-accent); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px;">Set List</h2>
+            <p class="text-center text-lg font-serif italic text-[var(--brass-accent)] mb-8" style="max-width:600px;margin:0 auto 32px auto;">Imagina que puedes elegir tú las canciones que vamos a tocar. Haz tu propia selección y crea el ambiente perfecto para tu evento.</p>
+            <div id="celListRoot"></div>
         </div>
     </section>
 
@@ -127,109 +137,21 @@
         </div>
     </section>
 
-    <!-- Section 5: Repertoire -->
+
+    <!-- Section 5: Repertoire + Formulario juntos -->
     <section id="repertorio" class="section repertoire-section" data-reveal>
-        <div class="container container--narrow">
-            <h2 class="section__title text-center">Pop Rock Español</h2>
-
-            <div class="chips">
-                <button class="chip active" type="button" data-genre="clasicos">Clásicos</button>
-                <button class="chip" type="button" data-genre="dosmiles">2000s</button>
-                <button class="chip" type="button" data-genre="actual">Actual</button>
-                <button class="chip" type="button" data-genre="fiesta">Fiesta</button>
-            </div>
-
-            <div id="songsGrid" class="songs-grid" aria-live="polite"></div>
-
-            <div class="setlist-builder">
-                <div class="setlist-builder__header">
-                    <p id="selectedSongsCount" class="setlist-builder__count">0 canciones seleccionadas</p>
-                    <button id="clearSetlistBtn" type="button" class="setlist-builder__clear">Limpiar</button>
-                </div>
-                <div id="selectedSongsList" class="selected-songs">
-                    <span class="selected-songs__empty">Selecciona canciones y te preparamos un set a medida.</span>
-                </div>
-                <a id="sendSetBtn" href="#presupuesto" class="btn btn--primary setlist-builder__cta is-disabled" aria-disabled="true">Enviar este repertorio</a>
-            </div>
-
-            <p class="repertoire-note">¿Tienes una canción imprescindible? La preparamos.</p>
-        </div>
-    </section>
-
-    <!-- Section 6: Reviews -->
-    <section id="reseñas" class="section reviews-section" data-reveal>
         <div class="container">
-            <div class="grid grid--3">
-                <div class="review-card">
-                    <div class="review-card__header">
-                        <span class="review-card__name">Elena R.</span>
-                        <span class="review-card__event">Boda · Bilbao</span>
-                    </div>
-                    <p>"Increíbles. Hicieron que la fiesta fuera inolvidable. El sonido fue perfecto y los invitados no
-                        pararon de bailar."</p>
-                </div>
-                <div class="review-card">
-                    <div class="review-card__header">
-                        <span class="review-card__name">Mikel A.</span>
-                        <span class="review-card__event">Evento Empresa</span>
-                    </div>
-                    <p>"Profesionalidad absoluta. Desde el montaje hasta el show final, YourVersion demostró por qué son
-                        premium."</p>
-                </div>
-                <div class="review-card">
-                    <div class="review-card__header">
-                        <span class="review-card__name">Sara P.</span>
-                        <span class="review-card__event">Cóctel · Getxo</span>
-                    </div>
-                    <p>"El ambiente que crearon durante el cóctel fue mágico. Volumen ideal y selección musical
-                        inmejorable."</p>
-                </div>
-                <div class="review-card">
-                    <div class="review-card__header">
-                        <span class="review-card__name">Jon G.</span>
-                        <span class="review-card__event">Fiesta Privada</span>
-                    </div>
-                    <p>"Un repertorio que todo el mundo conoce. La mejor decisión para nuestra fiesta de aniversario."
-                    </p>
-                </div>
-                <div class="review-card">
-                    <div class="review-card__header">
-                        <span class="review-card__name">Lucía M.</span>
-                        <span class="review-card__event">Boda · Vitoria</span>
-                    </div>
-                    <p>"Nos ayudaron con todo el sonido de la ceremonia y luego el directo fue espectacular. 10/10."</p>
-                </div>
-                <div class="review-card">
-                    <div class="review-card__header">
-                        <span class="review-card__name">Pablo S.</span>
-                        <span class="review-card__event">Gala Benéfica</span>
-                    </div>
-                    <p>"Elegantes y con mucha energía. Adaptaron el repertorio perfectamente al tono de la gala."</p>
-                </div>
-            </div>
-
-            <div class="trusted-by">
-                <div class="trusted-logo"></div>
-                <div class="trusted-logo"></div>
-                <div class="trusted-logo"></div>
-                <div class="trusted-logo"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 7: Quote Form -->
-    <section id="presupuesto" class="section form-section" data-reveal>
-        <div class="container container--narrow">
-            <div class="form-panel">
+            <h2 class="section__title text-center" style="font-family: var(--font-main); color: var(--brass-accent); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px;">Set List</h2>
+            <div id="celListRoot"></div>
+            <!-- Formulario justo debajo del Set List -->
+            <div class="form-panel" style="margin-top:48px;">
                 <h2 class="form-panel__title">Pedir presupuesto</h2>
                 <p class="form-panel__subtitle">Cuéntanos tu idea y te responderemos en menos de 24h.</p>
-
                 <form id="quoteForm" class="quote-form">
                     <!-- Honeypot -->
                     <div style="display:none;">
                         <input type="text" name="b_website" tabindex="-1" value="">
                     </div>
-
                     <div class="form-row">
                         <div class="form-group">
                             <label for="nombre">Nombre*</label>
@@ -240,7 +162,6 @@
                             <input type="email" id="email" name="email" required placeholder="tu@email.com">
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="form-group">
                             <label for="telefono">Teléfono</label>
@@ -251,7 +172,6 @@
                             <input type="date" id="fecha" name="fecha" required>
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="form-group">
                             <label for="tipo">Tipo de evento*</label>
@@ -268,7 +188,6 @@
                             <input type="text" id="lugar" name="lugar" required placeholder="Ej: Bilbao, Caserío...">
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="form-group">
                             <label for="invitados">Nº Invitados</label>
@@ -283,7 +202,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label>Formato deseado</label>
                         <div class="checkbox-group">
@@ -299,7 +217,6 @@
                             </label>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label for="equipo">¿El lugar tiene equipo de sonido?</label>
                         <select id="equipo" name="equipo">
@@ -308,7 +225,6 @@
                             <option value="No">No</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label class="checkbox-container">
                             <input type="checkbox" id="needsSoundProduction" name="needsSoundProduction" value="Sí">
@@ -317,11 +233,9 @@
                         </label>
                         <p class="form-note">Cuanta más info nos des, más preciso será el presupuesto técnico.</p>
                     </div>
-
                     <div id="soundRequirements" class="conditional-panel is-hidden" aria-hidden="true">
                         <h3 class="conditional-panel__title">Producción técnica (solo si sonorizamos)</h3>
                         <p class="conditional-panel__subtitle">Comparte los datos técnicos de sonido e iluminación para ajustar el presupuesto.</p>
-
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="spaceType">Espacio (interior/exterior)</label>
@@ -337,7 +251,6 @@
                                 <input type="text" id="spaceSize" name="spaceSize" data-conditional placeholder="Ej: 120 m² / jardín grande / salón 20x10m">
                             </div>
                         </div>
-
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="audienceExpected">Público esperado</label>
@@ -348,7 +261,6 @@
                                 <input type="text" id="stageSize" name="stageSize" data-conditional placeholder="Ej: 6x4m / no hay escenario">
                             </div>
                         </div>
-
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="desiredPower">Potencia de sonido deseada</label>
@@ -359,7 +271,6 @@
                                 <input type="text" id="powerDistance" name="powerDistance" data-conditional placeholder="Ej: 15m aprox.">
                             </div>
                         </div>
-
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="maxPower">Potencia máxima soportada</label>
@@ -376,7 +287,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="lightingControl">Control de luces</label>
@@ -393,36 +303,27 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label for="comentarios">Comentarios</label>
-                        <textarea id="comentarios" name="comentarios" rows="4"
-                            placeholder="Algún detalle extra..."></textarea>
+                        <textarea id="comentarios" name="comentarios" rows="4" placeholder="Algún detalle extra..."></textarea>
                     </div>
-
                     <div class="form-group">
                         <label for="repertorioSeleccionado">Repertorio elegido en la web</label>
-                        <textarea id="repertorioSeleccionado" name="repertorioSeleccionado" rows="4" readonly
-                            placeholder="Selecciona canciones en la sección Pop Rock Español para incluirlas aquí automáticamente."></textarea>
+                        <textarea id="repertorioSeleccionado" name="repertorioSeleccionado" rows="4" readonly placeholder="Selecciona canciones en la sección Pop Rock Español para incluirlas aquí automáticamente."></textarea>
                     </div>
-
                     <button type="submit" class="btn btn--primary btn--full">Quiero presupuesto</button>
                 </form>
-
                 <!-- Success State -->
                 <div id="successState" class="success-state" style="display: none;">
                     <div class="success-state__icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c5a059" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c5a059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                             <polyline points="22 4 12 14.01 9 11.01" />
                         </svg>
                     </div>
                     <h3>¡Solicitud recibida!</h3>
                     <p>Hemos generado un resumen de tu solicitud. Puedes copiarlo o enviarlo por email directamente.</p>
-
                     <div class="summary-box" id="summaryBox"></div>
-
                     <div class="success-state__actions">
                         <button id="copyBtn" class="btn btn--secondary">Copiar resumen</button>
                         <a id="emailBtn" href="#" class="btn btn--primary">Enviar por email</a>
@@ -479,7 +380,6 @@
                 <p>Música premium para momentos inolvidables.</p>
             </div>
             <div class="footer__contact">
-                <a href="mailto:hola@yourversion.band">hola@yourversion.band</a>
                 <div class="footer__social">
                     <a href="https://www.instagram.com/yourversionbilbao/" target="_blank"
                         aria-label="Instagram">Instagram</a>
@@ -493,6 +393,67 @@
         </div>
     </footer>
 
+    <script>
+        tailwind = {
+            config: {
+                corePlugins: {
+                    preflight: false,
+                },
+            },
+        };
+    </script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+        // Animación sutil de partículas doradas tipo purpurina
+        window.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('particles-bg');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w = window.innerWidth;
+            let h = window.innerHeight;
+            canvas.width = w;
+            canvas.height = h;
+            const particles = Array.from({length: 32}, () => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 1.1 + 0.4,
+                dx: (Math.random()-0.5)*0.04,
+                dy: (Math.random()-0.5)*0.04,
+                alpha: Math.random()*0.18+0.12,
+                depth: Math.random()*0.7+0.3
+            }));
+            function draw() {
+                ctx.clearRect(0,0,w,h);
+                for(const p of particles){
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha * p.depth;
+                    ctx.beginPath();
+                    ctx.arc(p.x,p.y,p.r * p.depth,0,2*Math.PI);
+                    ctx.fillStyle = `rgba(197,160,89,${0.18 + 0.22*p.depth})`;
+                    ctx.shadowColor = `rgba(197,160,89,${0.12 + 0.18*p.depth})`;
+                    ctx.shadowBlur = 12 * p.depth;
+                    ctx.fill();
+                    ctx.restore();
+                    p.x += p.dx * p.depth;
+                    p.y += p.dy * p.depth;
+                    if(p.x<0||p.x>w) p.x = Math.random()*w;
+                    if(p.y<0||p.y>h) p.y = Math.random()*h;
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+            window.addEventListener('resize',()=>{
+                w = window.innerWidth;
+                h = window.innerHeight;
+                canvas.width = w;
+                canvas.height = h;
+            });
+        });
+        </script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" src="setlist-app.jsx"></script>
     <script src="app.js"></script>
 </body>
 

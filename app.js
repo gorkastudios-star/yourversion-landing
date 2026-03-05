@@ -139,106 +139,11 @@ function initSmoothScroll() {
 }
 
 /**
- * Repertoire filter chips + dynamic list
+ * Repertoire section is handled by React app (setlist-app.jsx)
  */
 function initRepertoireSection() {
-    const chips = document.querySelectorAll('.chip[data-genre]');
-    const songsGrid = document.getElementById('songsGrid');
-    const selectedSongsCount = document.getElementById('selectedSongsCount');
-    const selectedSongsList = document.getElementById('selectedSongsList');
-    const sendSetBtn = document.getElementById('sendSetBtn');
-    const clearSetlistBtn = document.getElementById('clearSetlistBtn');
-    const selectedSongsField = document.getElementById('repertorioSeleccionado');
-
-    if (!chips.length || !songsGrid) return;
-
-    const repertoire = {
-        clasicos: ['La Chica de Ayer', 'Lobo Hombre en París', 'Déjame', 'Bienvenidos', 'En Blanco y Negro', 'Escuela de Calor'],
-        dosmiles: ['Corazón Partío', 'Rosas', 'A Dios le Pido', 'Que la Detengan', 'Por la Boca Vive el Pez', 'Lady Madrid'],
-        actual: ['La Flaca (versión actual)', 'Bailar Pegados', 'Universos Infinitos', 'Un Beso y Una Flor (new vibe)', 'Lo Que Construimos', 'Cuando Te Vi'],
-        fiesta: ['Paquito el Chocolatero Pop', 'Mediterráneo Upbeat', 'Himno Final', 'Mix Verbena Rock', 'No Dudaría Fiesta', 'Insurrección Final']
-    };
-
-    const selectedSongs = new Set();
-
-    const syncSelectedSongs = () => {
-        const selectedList = Array.from(selectedSongs);
-        const hasSongs = selectedList.length > 0;
-
-        if (selectedSongsCount) {
-            selectedSongsCount.textContent = `${selectedList.length} canción${selectedList.length === 1 ? '' : 'es'} seleccionada${selectedList.length === 1 ? '' : 's'}`;
-        }
-
-        if (selectedSongsList) {
-            selectedSongsList.innerHTML = hasSongs
-                ? selectedList.map((song) => `<span class="selected-song">${song}</span>`).join('')
-                : '<span class="selected-songs__empty">Selecciona canciones y te preparamos un set a medida.</span>';
-        }
-
-        if (sendSetBtn) {
-            sendSetBtn.classList.toggle('is-disabled', !hasSongs);
-            sendSetBtn.setAttribute('aria-disabled', String(!hasSongs));
-        }
-
-        if (selectedSongsField) {
-            selectedSongsField.value = hasSongs
-                ? selectedList.join('\n')
-                : '';
-        }
-    };
-
-    const renderSongs = (genre) => {
-        const songs = repertoire[genre] || [];
-        songsGrid.classList.add('is-updating');
-
-        setTimeout(() => {
-            songsGrid.innerHTML = songs
-                .map((title) => {
-                    const selectedClass = selectedSongs.has(title) ? ' song--selected' : '';
-                    return `<button type="button" class="song${selectedClass}" data-title="${title}">${title}</button>`;
-                })
-                .join('');
-
-            songsGrid.classList.remove('is-updating');
-        }, 120);
-    };
-
-    songsGrid.addEventListener('click', (event) => {
-        const song = event.target.closest('.song[data-title]');
-        if (!song) return;
-
-        const title = song.dataset.title;
-
-        if (selectedSongs.has(title)) {
-            selectedSongs.delete(title);
-            song.classList.remove('song--selected');
-        } else {
-            selectedSongs.add(title);
-            song.classList.add('song--selected');
-        }
-
-        syncSelectedSongs();
-    });
-
-    if (clearSetlistBtn) {
-        clearSetlistBtn.addEventListener('click', () => {
-            selectedSongs.clear();
-            const activeChip = document.querySelector('.chip[data-genre].active');
-            renderSongs(activeChip ? activeChip.dataset.genre : 'clasicos');
-            syncSelectedSongs();
-        });
-    }
-
-    chips.forEach((chip) => {
-        chip.addEventListener('click', () => {
-            chips.forEach((item) => item.classList.remove('active'));
-            chip.classList.add('active');
-            renderSongs(chip.dataset.genre);
-        });
-    });
-
-    renderSongs('clasicos');
-    syncSelectedSongs();
+    const root = document.getElementById('celListRoot');
+    if (!root) return;
 }
 
 /**
@@ -246,15 +151,20 @@ function initRepertoireSection() {
  */
 function initFormHandling() {
     const form = document.getElementById('quoteForm');
+    if (!form) return;
+
+    const soundToggle = document.getElementById('needsSoundProduction');
+    const soundRequirements = document.getElementById('soundRequirements');
+    const conditionalFields = soundRequirements
+        ? soundRequirements.querySelectorAll('input, select, textarea')
+        : [];
+
     const successState = document.getElementById('successState');
     const summaryBox = document.getElementById('summaryBox');
     const copyBtn = document.getElementById('copyBtn');
     const emailBtn = document.getElementById('emailBtn');
-    const soundToggle = document.getElementById('needsSoundProduction');
-    const soundRequirements = document.getElementById('soundRequirements');
-    const conditionalFields = form ? form.querySelectorAll('[data-conditional]') : [];
 
-    if (!form) return;
+    if (!successState || !summaryBox || !copyBtn || !emailBtn) return;
 
     const toggleSoundRequirements = () => {
         const isActive = soundToggle?.checked;
