@@ -51,15 +51,6 @@
         </div>
     </section>
 
-    <!-- Section 3: Set List -->
-    <section id="repertorio" class="section repertoire-section" data-reveal>
-        <div class="container">
-            <h2 class="section__title text-center" style="font-family: var(--font-main); color: var(--brass-accent); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px;">Set List</h2>
-            <p class="text-center text-lg font-serif italic text-[var(--brass-accent)] mb-8" style="max-width:600px;margin:0 auto 32px auto;">Imagina que puedes elegir tú las canciones que vamos a tocar. Haz tu propia selección y crea el ambiente perfecto para tu evento.</p>
-            <div id="celListRoot"></div>
-        </div>
-    </section>
-
     <!-- Section 3: Services -->
     <section id="servicios" class="section services-section" data-reveal>
         <div class="container grid grid--3">
@@ -95,7 +86,6 @@
                 <h3>Cócteles & eventos privados</h3>
                 <ul class="service-card__list">
                     <li>Ambiente fino + energía si se pide</li>
-                    <li>Setlist adaptado al público</li>
                 </ul>
             </article>
 
@@ -117,255 +107,39 @@
         </div>
     </section>
 
-    <!-- Section 4: How it works -->
-    <section id="pasos" class="section timeline-section" data-reveal>
-        <div class="container">
-            <div class="timeline">
-                <div class="timeline-item">
-                    <span class="timeline-item__number">01</span>
-                    <h4>Cuéntanos tu fecha y formato</h4>
-                </div>
-                <div class="timeline-item">
-                    <span class="timeline-item__number">02</span>
-                    <h4>Te proponemos repertorio y presupuesto</h4>
-                </div>
-                <div class="timeline-item">
-                    <span class="timeline-item__number">03</span>
-                    <h4>Montamos sonido y lo dejamos perfecto</h4>
-                </div>
-            </div>
-        </div>
+    <!-- Section: Setlist Builder + Booking -->
+    <section style="padding:0;background:transparent;">
+        <div id="setlistAppRoot"></div>
     </section>
 
 
-    <!-- Section 5: Repertoire + Formulario juntos -->
-    <section id="repertorio" class="section repertoire-section" data-reveal>
-        <div class="container">
-            <h2 class="section__title text-center" style="font-family: var(--font-main); color: var(--brass-accent); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px;">Set List</h2>
-            <div id="celListRoot"></div>
-            <!-- Formulario justo debajo del Set List -->
-            <div class="form-panel" style="margin-top:48px;">
-                <h2 class="form-panel__title">Pedir presupuesto</h2>
-                <p class="form-panel__subtitle">Cuéntanos tu idea y te responderemos en menos de 24h.</p>
-                <form id="quoteForm" class="quote-form">
-                    <!-- Honeypot -->
-                    <div style="display:none;">
-                        <input type="text" name="b_website" tabindex="-1" value="">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nombre">Nombre*</label>
-                            <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email*</label>
-                            <input type="email" id="email" name="email" required placeholder="tu@email.com">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="telefono">Teléfono</label>
-                            <input type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000">
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha">Fecha del evento*</label>
-                            <input type="date" id="fecha" name="fecha" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="tipo">Tipo de evento*</label>
-                            <select id="tipo" name="tipo" required>
-                                <option value="" disabled selected>Selecciona una opción</option>
-                                <option value="Boda">Boda</option>
-                                <option value="Cóctel">Cóctel</option>
-                                <option value="Empresa">Evento Empresa</option>
-                                <option value="Privado">Fiesta Privada</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="lugar">Lugar/Localidad*</label>
-                            <input type="text" id="lugar" name="lugar" required placeholder="Ej: Bilbao, Caserío...">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="invitados">Nº Invitados</label>
-                            <input type="number" id="invitados" name="invitados" placeholder="Aprox.">
-                        </div>
-                        <div class="form-group">
-                            <label for="duracion">Duración del show</label>
-                            <select id="duracion" name="duracion">
-                                <option value="60">60 min</option>
-                                <option value="90" selected>90 min</option>
-                                <option value="120">120 min</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Formato deseado</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-container">
-                                <input type="checkbox" name="formato" value="Cóctel">
-                                <span class="checkmark"></span>
-                                Cóctel
-                            </label>
-                            <label class="checkbox-container">
-                                <input type="checkbox" name="formato" value="Fiesta">
-                                <span class="checkmark"></span>
-                                Fiesta
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="equipo">¿El lugar tiene equipo de sonido?</label>
-                        <select id="equipo" name="equipo">
-                            <option value="No lo sé">No lo sé</option>
-                            <option value="Sí">Sí</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="needsSoundProduction" name="needsSoundProduction" value="Sí">
-                            <span class="checkmark"></span>
-                            Necesito que YourVersion sonorice el evento
-                        </label>
-                        <p class="form-note">Cuanta más info nos des, más preciso será el presupuesto técnico.</p>
-                    </div>
-                    <div id="soundRequirements" class="conditional-panel is-hidden" aria-hidden="true">
-                        <h3 class="conditional-panel__title">Producción técnica (solo si sonorizamos)</h3>
-                        <p class="conditional-panel__subtitle">Comparte los datos técnicos de sonido e iluminación para ajustar el presupuesto.</p>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="spaceType">Espacio (interior/exterior)</label>
-                                <select id="spaceType" name="spaceType" data-conditional>
-                                    <option value="">Selecciona</option>
-                                    <option value="Interior">Interior</option>
-                                    <option value="Exterior">Exterior</option>
-                                    <option value="Mixto">Mixto</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="spaceSize">Tamaño del espacio</label>
-                                <input type="text" id="spaceSize" name="spaceSize" data-conditional placeholder="Ej: 120 m² / jardín grande / salón 20x10m">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="audienceExpected">Público esperado</label>
-                                <input type="number" id="audienceExpected" name="audienceExpected" data-conditional placeholder="Ej: 180 personas">
-                            </div>
-                            <div class="form-group">
-                                <label for="stageSize">Tamaño del escenario</label>
-                                <input type="text" id="stageSize" name="stageSize" data-conditional placeholder="Ej: 6x4m / no hay escenario">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="desiredPower">Potencia de sonido deseada</label>
-                                <input type="text" id="desiredPower" name="desiredPower" data-conditional placeholder="Ej: cobertura suave / presión alta / no definido">
-                            </div>
-                            <div class="form-group">
-                                <label for="powerDistance">Distancia a toma de corriente</label>
-                                <input type="text" id="powerDistance" name="powerDistance" data-conditional placeholder="Ej: 15m aprox.">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="maxPower">Potencia máxima soportada</label>
-                                <input type="text" id="maxPower" name="maxPower" data-conditional placeholder="Ej: 3.500W / 16A por línea">
-                            </div>
-                            <div class="form-group">
-                                <label for="lightingType">Tipo de iluminación</label>
-                                <select id="lightingType" name="lightingType" data-conditional>
-                                    <option value="">Selecciona</option>
-                                    <option value="Ambiente suave">Ambiente suave</option>
-                                    <option value="Concierto dinámico">Concierto dinámico</option>
-                                    <option value="Elegante corporativo">Elegante corporativo</option>
-                                    <option value="No necesitamos luces">No necesitamos luces</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="lightingControl">Control de luces</label>
-                                <select id="lightingControl" name="lightingControl" data-conditional>
-                                    <option value="">Selecciona</option>
-                                    <option value="Presets automáticos">Presets automáticos</option>
-                                    <option value="Necesitamos técnico de luces">Necesitamos técnico de luces</option>
-                                    <option value="No aplica">No aplica</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="riderInfo">Rider / requisitos técnicos</label>
-                                <input type="text" id="riderInfo" name="riderInfo" data-conditional placeholder="Ej: limitador, horario de carga, acceso...">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="comentarios">Comentarios</label>
-                        <textarea id="comentarios" name="comentarios" rows="4" placeholder="Algún detalle extra..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="repertorioSeleccionado">Repertorio elegido en la web</label>
-                        <textarea id="repertorioSeleccionado" name="repertorioSeleccionado" rows="4" readonly placeholder="Selecciona canciones en la sección Pop Rock Español para incluirlas aquí automáticamente."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn--primary btn--full">Quiero presupuesto</button>
-                </form>
-                <!-- Success State -->
-                <div id="successState" class="success-state" style="display: none;">
-                    <div class="success-state__icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c5a059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                            <polyline points="22 4 12 14.01 9 11.01" />
-                        </svg>
-                    </div>
-                    <h3>¡Solicitud recibida!</h3>
-                    <p>Hemos generado un resumen de tu solicitud. Puedes copiarlo o enviarlo por email directamente.</p>
-                    <div class="summary-box" id="summaryBox"></div>
-                    <div class="success-state__actions">
-                        <button id="copyBtn" class="btn btn--secondary">Copiar resumen</button>
-                        <a id="emailBtn" href="#" class="btn btn--primary">Enviar por email</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Section 8: FAQ -->
-    <section id="faq" class="section faq-section" data-reveal>
-        <div class="container container--narrow">
-            <h2 class="section__title text-center">Preguntas frecuentes</h2>
-            <div class="accordion">
-                <details class="accordion__item">
-                    <summary>¿En qué zona trabajáis?</summary>
-                    <p>Trabajamos principalmente en Bilbao, Bizkaia y todo el País Vasco, aunque nos desplazamos si el
-                        evento lo requiere.</p>
+    <!-- FAQ -->
+    <section id="faq" data-reveal style="padding: 96px 0 0 0;">
+        <div style="max-width: 620px; margin: 0 auto; padding: 0 24px;">
+            <p style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.2em; color: #c5a059; font-weight: 700; margin-bottom: 12px; text-align: center; font-family: 'Outfit', sans-serif;">FAQ</p>
+            <h2 style="font-size: 2rem; font-weight: 300; color: #fff; text-align: center; margin-bottom: 56px; font-family: 'Outfit', sans-serif; letter-spacing: -0.02em;">Preguntas frecuentes</h2>
+
+            <div style="border-top: 1px solid rgba(197,160,89,0.15);">
+                <details style="border-bottom: 1px solid rgba(197,160,89,0.15); padding: 20px 0;">
+                    <summary style="font-size: 1.05rem; font-weight: 500; color: #fff; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif;">¿En qué zona trabajáis? <span style="color: #c5a059; font-size: 1.2rem; font-weight: 300; transition: transform 0.3s;">+</span></summary>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-top: 12px; line-height: 1.7; font-family: 'Outfit', sans-serif; font-weight: 300;">Trabajamos principalmente en Bilbao, Bizkaia y todo el País Vasco, aunque nos desplazamos si el evento lo requiere.</p>
                 </details>
-                <details class="accordion__item">
-                    <summary>¿Incluís sonido?</summary>
-                    <p>Sí, disponemos de equipo de sonido (PA) propio de alta gama para adaptarnos a diferentes espacios
-                        y aforos.</p>
+                <details style="border-bottom: 1px solid rgba(197,160,89,0.15); padding: 20px 0;">
+                    <summary style="font-size: 1.05rem; font-weight: 500; color: #fff; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif;">¿Incluís sonido? <span style="color: #c5a059; font-size: 1.2rem; font-weight: 300;">+</span></summary>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-top: 12px; line-height: 1.7; font-family: 'Outfit', sans-serif; font-weight: 300;">Sí, disponemos de equipo de sonido (PA) propio de alta gama para adaptarnos a diferentes espacios y aforos.</p>
                 </details>
-                <details class="accordion__item">
-                    <summary>¿Se puede pedir repertorio a medida?</summary>
-                    <p>Totalmente. Tenemos un setlist base de Pop Rock Español, pero podemos preparar canciones
-                        especiales si nos avisas con tiempo.</p>
+                <details style="border-bottom: 1px solid rgba(197,160,89,0.15); padding: 20px 0;">
+                    <summary style="font-size: 1.05rem; font-weight: 500; color: #fff; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif;">¿Se puede pedir repertorio a medida? <span style="color: #c5a059; font-size: 1.2rem; font-weight: 300;">+</span></summary>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-top: 12px; line-height: 1.7; font-family: 'Outfit', sans-serif; font-weight: 300;">Sí, podemos preparar canciones especiales si nos avisas con tiempo.</p>
                 </details>
-                <details class="accordion__item">
-                    <summary>¿Cuánto dura el show?</summary>
-                    <p>Solemos ofrecer pases de 60, 90 o 120 minutos, siempre adaptándonos al ritmo de tu evento.</p>
+                <details style="border-bottom: 1px solid rgba(197,160,89,0.15); padding: 20px 0;">
+                    <summary style="font-size: 1.05rem; font-weight: 500; color: #fff; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif;">¿Cuánto dura el show? <span style="color: #c5a059; font-size: 1.2rem; font-weight: 300;">+</span></summary>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-top: 12px; line-height: 1.7; font-family: 'Outfit', sans-serif; font-weight: 300;">Solemos ofrecer pases de 60, 90 o 120 minutos, siempre adaptándonos al ritmo de tu evento.</p>
                 </details>
-                <details class="accordion__item">
-                    <summary>¿Cómo se reserva la fecha?</summary>
-                    <p>Una vez aceptado el presupuesto, se realiza una pequeña señal para bloquear la fecha en nuestro
-                        calendario.</p>
-                </details>
-                <details class="accordion__item">
-                    <summary>¿Cuánto tardáis en responder?</summary>
-                    <p>Nuestro compromiso es responderte con un presupuesto detallado en menos de 24 horas laborables.
-                    </p>
+                <details style="border-bottom: 1px solid rgba(197,160,89,0.15); padding: 20px 0;">
+                    <summary style="font-size: 1.05rem; font-weight: 500; color: #fff; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif;">¿Cómo se reserva la fecha? <span style="color: #c5a059; font-size: 1.2rem; font-weight: 300;">+</span></summary>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-top: 12px; line-height: 1.7; font-family: 'Outfit', sans-serif; font-weight: 300;">Contacta con nosotros y te explicamos el proceso de reserva y señal para bloquear la fecha.</p>
                 </details>
             </div>
         </div>
@@ -373,23 +147,18 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container footer__grid">
-            <div class="footer__brand">
-                <a href="#" class="logo">YourVersion</a>
-                <p>Música premium para momentos inolvidables.</p>
+    <footer style="padding: 80px 0 40px 0; font-family: 'Outfit', sans-serif;">
+        <div style="max-width: 620px; margin: 0 auto; padding: 0 24px; text-align: center;">
+            <div style="width: 48px; height: 1px; background: #c5a059; margin: 0 auto 40px auto;"></div>
+            <a href="#" style="font-size: 1.6rem; font-weight: 700; color: #c5a059; text-decoration: none; letter-spacing: -0.02em;">YourVersion</a>
+            <p style="margin-top: 10px; font-size: 0.95rem; color: rgba(255,255,255,0.5); font-weight: 300;">Música premium para momentos inolvidables.</p>
+            <div style="margin-top: 28px; display: flex; gap: 24px; justify-content: center;">
+                <a href="https://www.instagram.com/yourversionbilbao/" target="_blank" aria-label="Instagram" style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-decoration: none; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s;">Instagram</a>
+                <a href="https://www.musiqua.es/band/grupo-de-versiones-eventos-y-bodas-27216?fs=1" target="_blank" aria-label="Musiqua" style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-decoration: none; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s;">Musiqua</a>
             </div>
-            <div class="footer__contact">
-                <div class="footer__social">
-                    <a href="https://www.instagram.com/yourversionbilbao/" target="_blank"
-                        aria-label="Instagram">Instagram</a>
-                    <a href="https://www.musiqua.es/band/grupo-de-versiones-eventos-y-bodas-27216?fs=1" target="_blank"
-                        aria-label="Musiqua">Musiqua</a>
-                </div>
+            <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <p style="font-size: 0.8rem; color: rgba(255,255,255,0.3); font-weight: 300;">&copy; 2026 YourVersion &middot; <a href="#" style="color: rgba(255,255,255,0.3); text-decoration: none;">Aviso Legal</a> &middot; <a href="#" style="color: rgba(255,255,255,0.3); text-decoration: none;">Cookies</a></p>
             </div>
-        </div>
-        <div class="container footer__bottom">
-            <p>&copy; 2026 YourVersion · <a href="#">Aviso Legal</a> · <a href="#">Cookies</a></p>
         </div>
     </footer>
 
@@ -453,6 +222,14 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Firebase SDK (compat – globals: firebase.firestore(), etc.) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
     <script type="text/babel" src="setlist-app.jsx"></script>
     <script src="app.js"></script>
 </body>

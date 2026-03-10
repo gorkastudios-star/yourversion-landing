@@ -1,84 +1,31 @@
-const { useMemo, useState, useEffect } = React;
+/* YourVersion – Setlist Builder + Booking Form (browser/CDN build) */
+const { useState, useMemo, useEffect } = React;
 
-const IconBase = ({ size = 14, strokeWidth = 2, className = "", children }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={strokeWidth}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    aria-hidden="true"
-  >
-    {children}
-  </svg>
+/* ── Inline Lucide-style icon components ── */
+const I = ({ children, size = 24, sw = 2, className = "" }) => (
+  React.createElement('svg', {xmlns:"http://www.w3.org/2000/svg",width:size,height:size,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:sw,strokeLinecap:"round",strokeLinejoin:"round",className}, children)
 );
+const SearchIcon = (p) => <I {...p}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></I>;
+const Plus = (p) => <I {...p}><path d="M5 12h14"/><path d="M12 5v14"/></I>;
+const Trash2 = (p) => <I {...p}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></I>;
+const ArrowUp = (p) => <I {...p}><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></I>;
+const ArrowDown = (p) => <I {...p}><path d="m19 12-7 7-7-7"/><path d="M12 5v14"/></I>;
+const Check = (p) => <I {...p}><path d="M20 6 9 17l-5-5"/></I>;
+const ChevronRight = (p) => <I {...p}><path d="m9 18 6-6-6-6"/></I>;
+const ChevronLeft = (p) => <I {...p}><path d="m15 18-6-6 6-6"/></I>;
+const Clock = (p) => <I {...p}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></I>;
+const RefreshCw = (p) => <I {...p}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></I>;
+const MapPin = (p) => <I {...p}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></I>;
+const Users = (p) => <I {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></I>;
+const Mail = (p) => <I {...p}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></I>;
+const Phone = (p) => <I {...p}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></I>;
+const Music = (p) => <I {...p}><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></I>;
+const Zap = (p) => <I {...p}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></I>;
 
-const Search = (props) => (
-  <IconBase {...props}>
-    <circle cx="11" cy="11" r="8" />
-    <path d="m21 21-4.3-4.3" />
-  </IconBase>
-);
-
-const Plus = (props) => (
-  <IconBase {...props}>
-    <path d="M12 5v14" />
-    <path d="M5 12h14" />
-  </IconBase>
-);
-
-const Trash2 = (props) => (
-  <IconBase {...props}>
-    <path d="M3 6h18" />
-    <path d="M8 6V4h8v2" />
-    <path d="M19 6l-1 14H6L5 6" />
-    <path d="M10 11v6" />
-    <path d="M14 11v6" />
-  </IconBase>
-);
-
-const ArrowUp = (props) => (
-  <IconBase {...props}>
-    <path d="m12 19 0-14" />
-    <path d="m5 12 7-7 7 7" />
-  </IconBase>
-);
-
-const ArrowDown = (props) => (
-  <IconBase {...props}>
-    <path d="m12 5 0 14" />
-    <path d="m19 12-7 7-7-7" />
-  </IconBase>
-);
-
-const Check = (props) => (
-  <IconBase {...props}>
-    <path d="m20 6-11 11-5-5" />
-  </IconBase>
-);
-
-const ChevronRight = (props) => (
-  <IconBase {...props}>
-    <path d="m9 18 6-6-6-6" />
-  </IconBase>
-);
-
-const Clock = (props) => (
-  <IconBase {...props}>
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 6v6l4 2" />
-  </IconBase>
-);
-
+/* ── Song Data ── */
 const RAW_PACKS = [
   {
-    id: "poprock_es",
-    name: "Pop-Rock Español",
+    id: "poprock_es", name: "Pop-Rock Español",
     songs: [
       { title: "Devuélveme a mi chica", artist: "Hombres G" },
       { title: "La chica de ayer", artist: "Nacha Pop" },
@@ -103,11 +50,10 @@ const RAW_PACKS = [
     ],
   },
   {
-    id: "disney",
-    name: 'Pack "Disney"',
+    id: "disney", name: 'Pack "Disney"',
     songs: [
       { title: "Hakuna Matata", artist: "Rey León" },
-      { title: "We don’t talk about Bruno", artist: "Encanto" },
+      { title: "We don't talk about Bruno", artist: "Encanto" },
       { title: "Let it go", artist: "Frozen" },
       { title: "Bajo el mar", artist: "La Sirenita" },
       { title: "Todo un hombre haré de ti", artist: "Mulán" },
@@ -120,8 +66,7 @@ const RAW_PACKS = [
     ],
   },
   {
-    id: "los2000",
-    name: "Los 2000",
+    id: "los2000", name: "Los 2000",
     songs: [
       { title: "Boulevard of Broken Dreams", artist: "Green Day" },
       { title: "Me equivocaría otra vez", artist: "Fito" },
@@ -138,7 +83,7 @@ const RAW_PACKS = [
       { title: "Bad Romance", artist: "Lady Gaga" },
       { title: "A Punk", artist: "Vampire Weekend" },
       { title: "Electric Feel", artist: "MGMT" },
-      { title: "Don’t Stop The Music", artist: "Rihanna" },
+      { title: "Don't Stop The Music", artist: "Rihanna" },
       { title: "Princesas", artist: "Pereza" },
       { title: "Tenía tanto", artist: "Nena Daconte" },
       { title: "Me gustas tú", artist: "Manu Chao" },
@@ -146,18 +91,17 @@ const RAW_PACKS = [
     ],
   },
   {
-    id: "noche_viernes",
-    name: 'Pack "Noche de Viernes"',
+    id: "noche_viernes", name: 'Pack "Noche de Viernes"',
     songs: [
       { title: "La bilirrubina", artist: "Juan L Guerra" },
-      { title: "Livin’ la vida loca", artist: "Ricky Martin" },
+      { title: "Livin' la vida loca", artist: "Ricky Martin" },
       { title: "Dancin Queen", artist: "Abba" },
       { title: "Dile", artist: "Don Omar" },
       { title: "Gasolina", artist: "Daddy Yankee" },
       { title: "Si antes te hubiera conocido", artist: "Karol G" },
       { title: "La macarena", artist: "Los del Río" },
       { title: "I gotta feeling", artist: "The Black Eyed Peas" },
-      { title: "Don’t stop me now", artist: "Queen" },
+      { title: "Don't stop me now", artist: "Queen" },
       { title: "Smooth Criminal", artist: "Michael Jackson" },
       { title: "La morocha", artist: "BM, Luck Ra" },
       { title: "Rasputin", artist: "Boney M" },
@@ -167,15 +111,14 @@ const RAW_PACKS = [
     ],
   },
   {
-    id: "puro_rock",
-    name: 'Pack "Puro Rock"',
+    id: "puro_rock", name: 'Pack "Puro Rock"',
     songs: [
       { title: "Stand By", artist: "Extremoduro" },
       { title: "Por la boca vive el pez", artist: "Fito" },
       { title: "Hay poco rock and roll", artist: "Platero y Tú" },
       { title: "Salir", artist: "Extremoduro" },
       { title: "Nothing Else Matters", artist: "Metallica" },
-      { title: "Livin’ on a Prayer", artist: "Bon Jovi" },
+      { title: "Livin' on a Prayer", artist: "Bon Jovi" },
       { title: "Another One", artist: "Queen" },
       { title: "20 abril", artist: "Celtas Cortos" },
       { title: "Déjame", artist: "Los Secretos" },
@@ -188,8 +131,7 @@ const RAW_PACKS = [
     ],
   },
   {
-    id: "estandar",
-    name: 'Pack "Estándar"',
+    id: "estandar", name: 'Pack "Estándar"',
     songs: [
       { title: "Princesas", artist: "Pereza" },
       { title: "Rosas", artist: "La Oreja de Van Gogh" },
@@ -212,13 +154,55 @@ const RAW_PACKS = [
   },
 ];
 
+/* ── Google Sheets Integration ── */
+// Para sincronizar con Google Sheets:
+// 1. Crea una hoja con columnas: pack_id | pack_name | title | artist
+// 2. Archivo → Compartir → Publicar en la web → Hoja completa → CSV
+// 3. Pega la URL publicada aquí:
+const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1qJyxJ6ss_D1RA8mpCXXwODw-6ZoK6tPajstPUyrHOrI/export?format=csv&gid=0";
+
+function parseCSV(text) {
+  const lines = []; let current = []; let field = ""; let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"' && text[i + 1] === '"') { field += '"'; i++; }
+      else if (ch === '"') inQuotes = false;
+      else field += ch;
+    } else {
+      if (ch === '"') inQuotes = true;
+      else if (ch === ',') { current.push(field.trim()); field = ""; }
+      else if (ch === '\n' || (ch === '\r' && text[i + 1] === '\n')) {
+        current.push(field.trim());
+        if (current.some(f => f)) lines.push(current);
+        current = []; field = "";
+        if (ch === '\r') i++;
+      } else field += ch;
+    }
+  }
+  if (field || current.length) { current.push(field.trim()); if (current.some(f => f)) lines.push(current); }
+  return lines;
+}
+
+function csvToRawPacks(rows) {
+  const dataRows = rows.slice(1);
+  const packMap = new Map();
+  const packOrder = [];
+  for (const row of dataRows) {
+    const [packId, packName, title, artist] = row;
+    if (!packId || !title) continue;
+    if (!packMap.has(packId)) {
+      packMap.set(packId, { id: packId, name: packName || packId, songs: [] });
+      packOrder.push(packId);
+    }
+    packMap.get(packId).songs.push({ title, artist: artist || "" });
+  }
+  return packOrder.map(id => packMap.get(id));
+}
+
+/* ── Helpers ── */
 const slugify = (s) =>
-  (s || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+  (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 const songKey = (title, artist) => {
   const t = slugify(title);
@@ -231,13 +215,7 @@ function buildCatalogAndPacks(rawPacks) {
   const packs = rawPacks.map((p) => {
     const songIds = p.songs.map((s) => {
       const key = songKey(s.title, s.artist);
-      if (!songsMap.has(key)) {
-        songsMap.set(key, {
-          id: key,
-          title: s.title,
-          artist: s.artist || "",
-        });
-      }
+      if (!songsMap.has(key)) songsMap.set(key, { id: key, title: s.title, artist: s.artist || "" });
       return key;
     });
     return { ...p, songIds };
@@ -246,65 +224,72 @@ function buildCatalogAndPacks(rawPacks) {
 }
 
 function makeUid() {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
   return Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 }
 
-function App() {
-  const { catalog, packs } = useMemo(() => buildCatalogAndPacks(RAW_PACKS), []);
+/* ── Main App ── */
+function SetlistApp() {
+  const [rawPacksData, setRawPacksData] = useState(GOOGLE_SHEET_CSV_URL ? [] : RAW_PACKS);
+  const [sheetsLoading, setSheetsLoading] = useState(!!GOOGLE_SHEET_CSV_URL);
+  const [sheetsError, setSheetsError] = useState(false);
+  const { catalog, packs } = useMemo(() => buildCatalogAndPacks(rawPacksData), [rawPacksData]);
 
-  const [activePackId, setActivePackId] = useState("estandar");
+  const [activePackId, setActivePackId] = useState(GOOGLE_SHEET_CSV_URL ? null : "estandar");
   const [qPack, setQPack] = useState("");
   const [setlist, setSetlist] = useState([]);
   const [toast, setToast] = useState("");
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [pendingPackImport, setPendingPackImport] = useState(null);
+  const [replaceMenuConfig, setReplaceMenuConfig] = useState(null);
+  const [hoveredPackId, setHoveredPackId] = useState(null);
+
+  const [bookingData, setBookingData] = useState({
+    name: "", email: "", phone: "", date: "", eventType: "", location: "", guests: "",
+    showDuration: "60 min", format: "Cóctel", hasSoundSystem: "No lo sé", needsOurSound: false,
+    spaceType: "Interior", spaceSize: "", expectedAudience: "", stageSize: "", soundPower: "",
+    powerDistance: "", maxPower: "", lightingType: "", lightingControl: "", technicalRider: "", comments: ""
+  });
+
+  useEffect(() => {
+    if (!GOOGLE_SHEET_CSV_URL) return;
+    const cacheBust = '_t=' + Date.now();
+    const url = GOOGLE_SHEET_CSV_URL + (GOOGLE_SHEET_CSV_URL.includes('?') ? '&' : '?') + cacheBust;
+    fetch(url, { redirect: 'follow' })
+      .then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const ct = r.headers.get('content-type') || '';
+        if (ct.includes('text/html')) throw new Error('Got HTML instead of CSV — sheet may not be shared publicly');
+        return r.text();
+      })
+      .then(text => {
+        if (text.startsWith('<!') || text.startsWith('<html')) throw new Error('Got HTML page — check sharing settings');
+        const rows = parseCSV(text);
+        if (rows.length > 1) {
+          const newPacks = csvToRawPacks(rows);
+          if (newPacks.length > 0) {
+            setRawPacksData(newPacks);
+            setActivePackId(newPacks[0].id);
+          } else { setSheetsError(true); }
+        } else { setSheetsError(true); }
+      })
+      .catch((err) => { console.error('[YourVersion] Google Sheets sync error:', err); setSheetsError(true); setRawPacksData(RAW_PACKS); setActivePackId('estandar'); })
+      .finally(() => setSheetsLoading(false));
+  }, []);
 
   const DURATION_OPTIONS = [60, 80, 100, 120, 140, 160, 180];
   const [targetDuration, setTargetDuration] = useState(60);
   const AVERAGE_SONG_DURATION = 4;
 
-  const targetSongCount = useMemo(() => {
-    return Math.ceil(targetDuration / AVERAGE_SONG_DURATION);
-  }, [targetDuration]);
+  const targetSongCount = useMemo(() => Math.ceil(targetDuration / AVERAGE_SONG_DURATION), [targetDuration]);
+  const activePack = useMemo(() => packs.find((p) => p.id === activePackId) || packs[0] || null, [packs, activePackId]);
+  const catalogById = useMemo(() => { const m = new Map(); for (const s of catalog) m.set(s.id, s); return m; }, [catalog]);
+  const selectedSongIds = useMemo(() => { const s = new Set(); for (const it of setlist) s.add(it.songId); return s; }, [setlist]);
 
-  const activePack = useMemo(
-    () => packs.find((p) => p.id === activePackId) || packs[0],
-    [packs, activePackId]
-  );
-
-  const catalogById = useMemo(() => {
-    const m = new Map();
-    for (const s of catalog) m.set(s.id, s);
-    return m;
-  }, [catalog]);
-
-  const selectedSongIds = useMemo(() => {
-    const s = new Set();
-    for (const it of setlist) s.add(it.songId);
-    return s;
-  }, [setlist]);
-
-  useEffect(() => {
-    const textarea = document.getElementById("repertorioSeleccionado");
-    if (!textarea) return;
-    const text = setlist
-      .map((it, i) => {
-        const ss = catalogById.get(it.songId);
-        return `${i + 1}. ${ss?.title || "??"}${ss?.artist ? " — " + ss.artist : ""}`;
-      })
-      .join("\n");
-    textarea.value = text;
-  }, [setlist, catalogById]);
-
-  const flash = (msg) => {
-    setToast(msg);
-    setTimeout(() => setToast(""), 2500);
-  };
+  const flash = (msg) => { setToast(msg); setTimeout(() => setToast(""), 2500); };
 
   const packSongs = useMemo(() => {
+    if (!activePack) return [];
     const qq = slugify(qPack.trim());
     const list = activePack.songIds.map((id) => catalogById.get(id)).filter(Boolean);
     if (!qq) return list;
@@ -317,223 +302,174 @@ function App() {
     flash("Añadida");
   };
 
-  const removeItem = (itemUid) => {
-    setSetlist((prev) => prev.filter((x) => x.uid !== itemUid));
+  const replaceItem = (index, newSongId) => {
+    if (selectedSongIds.has(newSongId)) { flash("Ya está en la lista"); return; }
+    setSetlist((prev) => { const copy = [...prev]; copy[index] = { ...copy[index], songId: newSongId }; return copy; });
+    setReplaceMenuConfig(null); setHoveredPackId(null); flash("Sustituida");
   };
 
+  const removeItem = (uid) => setSetlist((prev) => prev.filter((x) => x.uid !== uid));
+
   const moveItem = (from, to) => {
-    setSetlist((prev) => {
-      if (from === to) return prev;
-      const copy = prev.slice();
-      const [it] = copy.splice(from, 1);
-      copy.splice(to, 0, it);
-      return copy;
-    });
+    setSetlist((prev) => { if (from === to) return prev; const c = prev.slice(); const [it] = c.splice(from, 1); c.splice(to, 0, it); return c; });
   };
 
   const importPack = (packId, mode) => {
-    const pack = packs.find((p) => p.id === packId);
+    const pack = packs.find(p => p.id === packId);
     if (!pack) return;
-
     if (mode === "replace") {
-      const items = pack.songIds.map((songId) => ({ uid: makeUid(), songId }));
-      setSetlist(items);
+      setSetlist(pack.songIds.map((songId) => ({ uid: makeUid(), songId })));
       flash("Colección importada");
     } else {
-      const items = pack.songIds
-        .filter((songId) => !selectedSongIds.has(songId))
-        .map((songId) => ({ uid: makeUid(), songId }));
-      if (items.length === 0) return flash("Sin pistas nuevas");
+      const items = pack.songIds.filter((sid) => !selectedSongIds.has(sid)).map((songId) => ({ uid: makeUid(), songId }));
+      if (!items.length) return flash("Sin pistas nuevas");
       setSetlist((prev) => [...prev, ...items]);
       flash(`${items.length} añadidas`);
     }
     setPendingPackImport(null);
   };
 
-  const clearAll = () => {
-    if (window.confirm("¿Seguro que quieres vaciar todo el setlist?")) {
-      setSetlist([]);
-      flash("Vaciado");
-    }
-  };
+  const clearAll = () => { if (window.confirm("¿Seguro que quieres vaciar todo el setlist?")) { setSetlist([]); flash("Vaciado"); } };
 
   const onDragStartSong = (e, songId) => {
-    if (selectedSongIds.has(songId)) {
-      e.preventDefault();
-      return;
-    }
-    e.dataTransfer.setData("text/plain", songId);
-    e.dataTransfer.effectAllowed = "copy";
+    if (selectedSongIds.has(songId)) { e.preventDefault(); return; }
+    e.dataTransfer.setData("text/plain", songId); e.dataTransfer.effectAllowed = "copy";
   };
-
-  const onDropToSetlist = (e) => {
-    e.preventDefault();
-    setIsDraggingOver(false);
-    const songId = e.dataTransfer.getData("text/plain");
-    if (!songId) return;
-    if (selectedSongIds.has(songId)) return flash("Ya seleccionada");
-    addSong(songId);
-  };
-
-  const onDragOver = (e) => {
-    e.preventDefault();
-    setIsDraggingOver(true);
-    e.dataTransfer.dropEffect = "copy";
-  };
-
-  const onDragLeave = () => {
-    setIsDraggingOver(false);
-  };
+  const onDropToSetlist = (e) => { e.preventDefault(); setIsDraggingOver(false); const sid = e.dataTransfer.getData("text/plain"); if (sid && !selectedSongIds.has(sid)) addSong(sid); };
+  const onDragOver = (e) => { e.preventDefault(); setIsDraggingOver(true); e.dataTransfer.dropEffect = "copy"; };
+  const onDragLeave = () => setIsDraggingOver(false);
 
   const copyToClipboard = () => {
-    const text = setlist
-      .map((it, i) => {
-        const ss = catalogById.get(it.songId);
-        return `${i + 1}. ${ss?.title || "??"}${ss?.artist ? " — " + ss.artist : ""}`;
-      })
-      .join("\n");
-    navigator.clipboard
-      ?.writeText(text)
-      .then(() => {
-        flash("Copiado al portapapeles");
-      })
-      .catch(() => {
-        flash("Error al copiar");
-      });
+    const text = setlist.map((it, i) => { const ss = catalogById.get(it.songId); return `${i+1}. ${ss?.title||"??"}${ss?.artist?" — "+ss.artist:""}`; }).join("\n");
+    navigator.clipboard?.writeText(text).then(() => flash("Copiado al portapapeles")).catch(() => flash("Error al copiar"));
   };
 
+  const handleBookingChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setBookingData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const currentRepertoireSummary = useMemo(() => {
+    return setlist.map((it) => { const ss = catalogById.get(it.songId); return `${ss?.title||"??"}${ss?.artist?" ("+ss.artist+")":""}`; }).join(", ");
+  }, [setlist, catalogById]);
+
   return (
-    <div className="font-[Outfit,sans-serif] p-0 md:p-0 lg:overflow-hidden flex flex-col selection:bg-zinc-200 rounded-[18px] shadow-xl" style={{
-      boxShadow:'0 8px 32px rgba(197,160,89,0.10)',
-      border:'none',
-      height:'740px',
-      minHeight:'740px',
-      maxHeight:'740px',
-      background:'#0a0a0a',
-      color:'#e8e8ea'
-    }}>
+    <div className="text-[#e8e8ea] font-sans p-4 md:p-8 lg:overflow-y-auto selection:bg-[#c5a059]/20" style={{fontFamily:"'Outfit',sans-serif"}}>
+
+      {/* Modal de Importación */}
       {pendingPackImport && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white max-w-sm w-full shadow-2xl border border-zinc-100 p-8 rounded-sm">
-            <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-[0.2em] mb-4">Importar Colección</h3>
-            <p className="text-lg font-serif text-black leading-tight mb-8 lowercase italic tracking-tight">
-              ¿Desea combinar esta selección con la actual o comenzar un nuevo proyecto?
-            </p>
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-[#0a0a0a] max-w-sm w-full shadow-2xl shadow-black/40 border border-white/[0.08] p-8 rounded-sm">
+            <h3 className="text-xs font-bold text-[#c5a059] uppercase tracking-[0.2em] mb-4">Colección Completa</h3>
+            <p className="text-lg font-serif text-[#e8e8ea] leading-tight mb-8 lowercase italic tracking-tight">¿Desea combinar esta selección con el proyecto actual o comenzar uno nuevo?</p>
             <div className="flex flex-col gap-3">
-              <button
-                onClick={() => importPack(pendingPackImport, "append")}
-                className="w-full py-4 bg-zinc-100 hover:bg-zinc-200 text-black text-[9px] uppercase tracking-[0.3em] font-bold transition-all"
-              >
-                Añadir al actual
-              </button>
-              <button
-                onClick={() => importPack(pendingPackImport, "replace")}
-                className="w-full py-4 bg-black text-white text-[9px] uppercase tracking-[0.3em] font-bold transition-all hover:bg-zinc-800"
-              >
-                Comenzar de nuevo
-              </button>
-              <button
-                onClick={() => setPendingPackImport(null)}
-                className="w-full py-2 text-[8px] text-zinc-300 uppercase tracking-widest font-bold mt-2"
-              >
-                Cancelar
-              </button>
+              <button onClick={() => importPack(pendingPackImport, "append")} className="w-full py-4 bg-white/[0.06] hover:bg-white/[0.12] text-[#e8e8ea] text-[9px] uppercase tracking-[0.3em] font-bold transition-all">Añadir al actual</button>
+              <button onClick={() => importPack(pendingPackImport, "replace")} className="w-full py-4 bg-[#c5a059] text-black text-[9px] uppercase tracking-[0.3em] font-bold transition-all hover:bg-[#d4b46e]">Comenzar de nuevo</button>
+              <button onClick={() => setPendingPackImport(null)} className="w-full py-2 text-[8px] text-[#555] uppercase tracking-widest font-bold mt-2">Cancelar</button>
             </div>
           </div>
         </div>
       )}
 
-      <div
-        className={`fixed top-8 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 transform ${
-          toast ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
-        }`}
-      >
-        <div className="bg-black text-white px-8 py-3 shadow-2xl text-[10px] tracking-[0.2em] uppercase font-bold flex items-center gap-3">
-          <span className="w-1 h-1 bg-white rounded-full animate-pulse"></span>
+      {/* Menú Global de Reemplazo */}
+      {replaceMenuConfig && (
+        <React.Fragment>
+          <div className="fixed inset-0 z-[120]" onClick={() => { setReplaceMenuConfig(null); setHoveredPackId(null); }} />
+          <div className="fixed w-52 bg-[#111] border border-white/[0.08] shadow-2xl shadow-black/50 py-2 z-[121] rounded-sm" style={{ top: replaceMenuConfig.top, right: replaceMenuConfig.right }}>
+            <div className="px-4 pb-2 mb-2 border-b border-white/[0.05] text-[8px] font-bold text-[#c5a059] uppercase tracking-[0.2em]">Sustituir por...</div>
+            {packs.map((p) => (
+              <div key={p.id} className="relative" onMouseEnter={() => setHoveredPackId(p.id)}>
+                <button className="w-full text-left px-4 py-2 hover:bg-white/[0.05] flex justify-between items-center text-[10px] font-bold text-[#888] uppercase tracking-widest transition-colors">
+                  <span className="truncate">{p.name}</span>
+                  <ChevronLeft size={12} className="text-[#555]" />
+                </button>
+                {hoveredPackId === p.id && (
+                  <div className="absolute right-full top-0 w-64 bg-[#111] border border-white/[0.08] shadow-2xl shadow-black/50 py-2 z-[122] mr-1 max-h-72 overflow-y-auto rounded-sm">
+                    <div className="px-4 pb-2 mb-2 border-b border-white/[0.05] text-[10px] font-serif italic text-[#c5a059] lowercase tracking-tight sticky top-0 bg-[#111]/95 backdrop-blur-sm">{p.name}</div>
+                    {p.songIds.map((sid) => {
+                      const song = catalogById.get(sid);
+                      const already = selectedSongIds.has(sid);
+                      return (
+                        <button key={sid} disabled={already} onClick={(e) => { e.stopPropagation(); replaceItem(replaceMenuConfig.index, sid); }}
+                          className={`w-full text-left px-4 py-1.5 text-xs transition-colors ${already ? 'opacity-20 cursor-not-allowed' : 'hover:bg-white/[0.05] hover:text-[#e8e8ea]'}`}>
+                          <div className="font-bold truncate tracking-tight text-[#ccc]">{song.title}</div>
+                          <div className="text-[9px] uppercase tracking-widest opacity-40 truncate">{song.artist}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </React.Fragment>
+      )}
+
+      {/* Toast */}
+      <div className={`fixed top-8 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 transform ${toast ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}>
+        <div className="bg-[#c5a059] text-black px-8 py-3 shadow-2xl shadow-[#c5a059]/20 text-[10px] tracking-[0.2em] uppercase font-bold flex items-center gap-3">
+          <span className="w-1 h-1 bg-black rounded-full animate-pulse"></span>
           {toast}
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col bg-transparent shadow-none border-none overflow-hidden h-full relative rounded-[18px]">
-        <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[1.2fr_420px] min-h-0 overflow-hidden rounded-[18px]">
-          <section className="flex flex-col lg:flex-row border-b-0 lg:border-b-0 lg:border-r-0 bg-transparent min-h-[40vh] lg:min-h-0 overflow-hidden rounded-l-[18px]">
-            <div className="flex-none lg:w-64 bg-[#181818] border-b-0 lg:border-b-0 lg:border-r-0 flex flex-col rounded-l-[18px]">
-              <div className="p-6 border-b-0 bg-transparent">
+      <div className="max-w-6xl mx-auto w-full flex flex-col gap-16">
+        {/* ═══ SETLIST BUILDER ═══ */}
+        <div className="bg-[#0a0a0a] shadow-2xl shadow-black/40 border border-white/[0.08] overflow-hidden h-[90vh] lg:h-[85vh] relative flex flex-col rounded-sm">
+
+          {/* Loading overlay mientras carga desde Google Sheets */}
+          {sheetsLoading && (
+            <div className="absolute inset-0 z-50 bg-[#0a0a0a] flex flex-col items-center justify-center gap-6">
+              <div className="w-8 h-8 border-2 border-white/[0.1] border-t-[#c5a059] rounded-full animate-spin"></div>
+              <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#888]">Cargando repertorio...</p>
+            </div>
+          )}
+
+          {/* Error banner */}
+          {sheetsError && !sheetsLoading && (
+            <div className="bg-red-900/20 border-b border-red-500/20 px-6 py-3 flex items-center justify-center gap-3">
+              <span className="w-1.5 h-1.5 bg-red-400 rounded-full"></span>
+              <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-red-400">Error al sincronizar — mostrando repertorio local</p>
+            </div>
+          )}
+
+          {/* Sync badge */}
+          {GOOGLE_SHEET_CSV_URL && !sheetsLoading && !sheetsError && (
+            <div className="bg-[#c5a059]/5 border-b border-[#c5a059]/10 px-6 py-2 flex items-center justify-center gap-2">
+              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+              <p className="text-[8px] uppercase tracking-[0.3em] font-bold text-[#888]">Sincronizado con Google Sheets</p>
+            </div>
+          )}
+          <div className="flex-1 flex flex-col lg:grid lg:grid-cols-[240px_1fr_360px] min-h-0 overflow-hidden">
+            {/* Col 1 – Packs sidebar */}
+            <div className="flex-none lg:min-h-0 bg-[#080808] border-b lg:border-b-0 lg:border-r border-white/[0.08] flex flex-col">
+              <div className="p-6 border-b border-white/[0.08] bg-[#0a0a0a]">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-[11px] font-bold text-[var(--brass-accent)] uppercase tracking-[0.2em] flex items-center gap-2 font-sans">
-                    <Clock size={11} strokeWidth={2} /> Duración
-                  </h2>
-                  <div className="text-[11px] font-bold text-[var(--brass-accent)] tracking-widest font-sans">
-                    {setlist.length} <span className="text-zinc-300 mx-1">/</span> {targetSongCount}
-                  </div>
+                  <h2 className="text-[9px] font-bold text-[#888] uppercase tracking-[0.2em] flex items-center gap-2"><Clock size={11} sw={2} /> Duración</h2>
+                  <div className="text-[10px] font-bold text-[#e8e8ea] tracking-widest">{setlist.length} <span className="text-[#555] mx-1">/</span> {targetSongCount}</div>
                 </div>
-
                 <div className="relative group">
-                  <select
-                    value={targetDuration}
-                    onChange={(e) => setTargetDuration(parseInt(e.target.value, 10))}
-                    className="w-full bg-[#18120f] border border-[var(--brass-accent)] text-xs font-bold py-2 px-3 rounded-[8px] focus:outline-none focus:border-[var(--brass-accent)] appearance-none cursor-pointer transition-colors text-[var(--brass-accent)] font-serif shadow-lg"
-                    style={{boxShadow:'0 2px 12px rgba(197,160,89,0.10)'}}
-                  >
-                    {DURATION_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt} style={{background:'#18120f', color:'var(--brass-accent)'}}>
-                        {Math.floor(opt / 60)}h {opt % 60 > 0 ? `${opt % 60}min` : ""}
-                      </option>
-                    ))}
+                  <select value={targetDuration} onChange={(e)=>setTargetDuration(parseInt(e.target.value))}
+                    className="w-full bg-transparent border-b border-white/[0.08] text-xs font-bold text-[#e8e8ea] py-1.5 focus:outline-none focus:border-[#c5a059] appearance-none cursor-pointer transition-colors">
+                    {DURATION_OPTIONS.map(o=><option key={o} value={o} style={{background:'#111',color:'#e8e8ea'}}>{Math.floor(o/60)}h {o%60>0?`${o%60}min`:''}</option>)}
                   </select>
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-300 group-hover:text-black transition-colors">
-                    <ChevronRight size={12} className="rotate-90" />
-                  </div>
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-[#555] group-hover:text-[#c5a059] transition-colors"><ChevronRight size={12} className="rotate-90"/></div>
                 </div>
-
-                <div className="mt-4 h-[2px] bg-zinc-800 overflow-hidden rounded-full">
-                  <div
-                    className="h-full bg-[var(--brass-accent)] transition-all duration-700 ease-out rounded-full"
-                    style={{ width: `${Math.min(100, (setlist.length / targetSongCount) * 100)}%`, background:'linear-gradient(90deg, var(--brass-accent), #fffbe6 100%)' }}
-                  ></div>
+                <div className="mt-4 h-[1.5px] bg-white/[0.08] overflow-hidden">
+                  <div className="h-full bg-[#c5a059] transition-all duration-700 ease-out" style={{width:`${Math.min(100,(setlist.length/targetSongCount)*100)}%`}}></div>
                 </div>
               </div>
-
-              <div className="hidden lg:block px-6 py-4 bg-transparent">
-                <h2 className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.3em] font-sans">Colecciones</h2>
-              </div>
-
-              <div className="flex lg:flex-col overflow-x-auto lg:overflow-y-auto lg:overflow-x-hidden p-3 gap-0.5 flex-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <div className="hidden lg:block px-6 py-4 bg-white/[0.02]"><h2 className="text-[9px] font-bold text-[#555] uppercase tracking-[0.3em]">Colecciones</h2></div>
+              <div className="flex lg:flex-col overflow-x-auto lg:overflow-y-auto lg:overflow-x-hidden p-3 gap-0.5 flex-1" style={{scrollbarWidth:'none'}}>
                 {packs.map((p) => {
                   const isActive = activePackId === p.id;
                   return (
                     <div key={p.id} className="flex items-center group/item px-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setPendingPackImport(p.id);
-                        }}
-                        className={`p-2 transition-all duration-300 ${
-                          isActive ? "text-white/40 hover:text-white" : "text-zinc-200 hover:text-black"
-                        }`}
-                        title="Importar colección completa"
-                      >
-                        <Plus size={14} strokeWidth={2.5} />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setActivePackId(p.id);
-                          setQPack("");
-                        }}
-                        className={`flex-1 flex justify-between items-center px-2 py-3.5 rounded-[8px] text-[11px] transition-all text-left group font-bold tracking-[0.05em] uppercase border border-transparent ${
-                          isActive ? "bg-[var(--brass-accent)] text-black shadow-lg border-[var(--brass-accent)]" : "text-zinc-300 hover:text-[var(--brass-accent)] hover:border-[var(--brass-accent)]"
-                        }`}
-                      >
+                      <button onClick={(e)=>{e.stopPropagation();setPendingPackImport(p.id);}} className={`p-2 transition-all duration-300 ${isActive?'text-black/40 hover:text-black':'text-[#444] hover:text-[#c5a059]'}`}><Plus size={14} sw={2.5}/></button>
+                      <button onClick={()=>{setActivePackId(p.id);setQPack("");}}
+                        className={`flex-1 flex justify-between items-center px-2 py-3.5 rounded-sm text-[11px] transition-all text-left group ${isActive?"bg-[#c5a059] text-black shadow-lg shadow-[#c5a059]/20":"text-[#777] hover:text-[#e8e8ea]"}`}>
                         <span className="truncate font-bold tracking-[0.05em] uppercase">{p.name}</span>
-                        <ChevronRight
-                          size={12}
-                          strokeWidth={2}
-                          className={`hidden lg:block transition-transform duration-300 ${
-                            isActive
-                              ? "translate-x-0 opacity-100"
-                              : "-translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-40"
-                          }`}
-                        />
+                        <ChevronRight size={12} sw={2} className={`hidden lg:block transition-transform duration-300 ${isActive?"translate-x-0 opacity-100":"-translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-40"}`}/>
                       </button>
                     </div>
                   );
@@ -541,172 +477,271 @@ function App() {
               </div>
             </div>
 
-            <div className="flex-1 flex flex-col min-w-0 bg-transparent">
-              <div className="p-6 border-b-0 bg-transparent z-10">
+            {/* Col 2 – Songs list */}
+            <div className="flex-1 flex flex-col min-w-0 min-h-0 bg-[#0a0a0a]">
+              <div className="p-6 border-b border-white/[0.05] bg-[#0a0a0a] z-10">
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none text-zinc-300">
-                    <Search size={13} strokeWidth={1.5} />
-                  </div>
-                  <input
-                    type="text"
-                    className="block w-full pl-7 pr-3 py-2 border-b border-zinc-800 bg-transparent placeholder-zinc-500 focus:outline-none focus:border-zinc-800 transition-colors text-[11px] font-medium text-zinc-200 tracking-wide font-sans"
-                    placeholder="Filtrar catálogo..."
-                    value={qPack}
-                    onChange={(e) => setQPack(e.target.value)}
-                  />
+                  <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none text-[#555]"><SearchIcon size={13} sw={1.5}/></div>
+                  <input type="text" className="block w-full pl-7 pr-3 py-2 border-b border-white/[0.08] bg-transparent placeholder-[#444] focus:outline-none focus:border-[#c5a059] transition-colors text-[11px] font-medium text-[#e8e8ea] tracking-wide"
+                    placeholder="Filtrar catálogo..." value={qPack} onChange={(e)=>setQPack(e.target.value)}/>
                 </div>
               </div>
+              <div className="flex-1 overflow-y-auto p-3 space-y-0.5 bg-[#090909]">
+                {packSongs.map((s) => {
+                  const isSel = selectedSongIds.has(s.id);
+                  return (
+                    <div key={s.id} draggable={!isSel} onDragStart={(e)=>onDragStartSong(e,s.id)}
+                      className={`flex items-center py-2 px-3 transition-all duration-300 border border-transparent rounded-sm group ${isSel?"opacity-20 grayscale":"bg-[#0a0a0a] hover:border-white/[0.08] hover:bg-white/[0.03] cursor-grab active:cursor-grabbing"}`}>
+                      <button onClick={()=>addSong(s.id)} disabled={isSel} className="flex-shrink-0 mr-3 p-1.5 text-[#444] hover:text-[#c5a059] transition-all duration-300 disabled:opacity-0">
+                        {isSel ? <Check size={14} sw={2.5}/> : <Plus size={14} sw={2.5}/>}
+                      </button>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[12px] font-bold text-[#e8e8ea] truncate tracking-tight leading-none mb-1">{s.title}</p>
+                        <p className="text-[9px] text-[#888] uppercase tracking-widest font-semibold truncate leading-none">{s.artist||"—"}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-              <div className="flex-1 overflow-y-auto p-3 space-y-0.5 bg-transparent">
-                {packSongs.length === 0 ? (
-                  <div className="text-center py-12 opacity-20">
-                    <Search className="mx-auto h-5 w-5 mb-3" strokeWidth={1} />
-                    <p className="text-[9px] uppercase tracking-widest font-bold">Sin pistas</p>
+            {/* Col 3 – Setlist panel */}
+            <div className="flex flex-col bg-[#0a0a0a] min-h-[50vh] lg:min-h-0 border-t lg:border-t-0 lg:border-l border-white/[0.08]">
+              <div className="p-6 border-b border-white/[0.08] bg-[#0a0a0a] flex justify-between items-center z-10">
+                <h2 className="text-[9px] font-bold text-[#888] uppercase tracking-[0.3em]">Mi Selección</h2>
+                <button onClick={clearAll} disabled={!setlist.length} className="text-[#444] hover:text-[#c5a059] transition-colors disabled:opacity-0"><Trash2 size={14} sw={1.5}/></button>
+              </div>
+              <div className={`flex-1 overflow-y-auto relative transition-colors duration-500 ${isDraggingOver?'bg-white/[0.03]':''}`}
+                onDrop={onDropToSetlist} onDragOver={onDragOver} onDragLeave={onDragLeave}>
+                {setlist.length === 0 ? (
+                  <div className="h-full min-h-[250px] flex flex-col items-center justify-center m-6 border border-dashed border-white/[0.1] text-center">
+                    <p className="text-[8px] font-bold text-[#555] uppercase tracking-[0.4em] mb-3">Componer lista</p>
                   </div>
                 ) : (
-                  packSongs.map((s) => {
-                    const isSelected = selectedSongIds.has(s.id);
-                    return (
-                      <div
-                        key={s.id}
-                        draggable={!isSelected}
-                        onDragStart={(e) => onDragStartSong(e, s.id)}
-                        className={`flex items-center py-2 px-3 transition-all duration-300 border border-transparent rounded-[8px] group ${
-                          isSelected
-                            ? "opacity-20 grayscale bg-transparent"
-                            : "bg-zinc-900 hover:border-zinc-800 hover:shadow-lg cursor-grab active:cursor-grabbing border border-zinc-800"
-                        }`}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => addSong(s.id)}
-                          disabled={isSelected}
-                          className="flex-shrink-0 mr-3 p-1.5 text-zinc-200 hover:text-black transition-all duration-300 disabled:opacity-0"
-                          title="Añadir pista"
-                        >
-                          {isSelected ? <Check size={14} strokeWidth={2.5} /> : <Plus size={14} strokeWidth={2.5} />}
-                        </button>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-[13px] font-bold text-zinc-200 truncate tracking-tight leading-none mb-1 font-sans" style={{fontFamily:'var(--font-main)'}}>{s.title}</p>
-                          <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold truncate leading-none font-sans">{s.artist || "—"}</p>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-          </section>
-
-          <section className="flex flex-col bg-transparent min-h-[50vh] lg:min-h-0 border-t-0 lg:border-t-0 border-r-0 rounded-r-[18px]">
-            <div className="p-6 border-b-0 bg-transparent flex justify-between items-center z-10">
-              <h2 className="text-[11px] font-bold text-zinc-500 uppercase tracking-[0.3em] font-sans">Mi Set List</h2>
-              <button
-                onClick={clearAll}
-                disabled={setlist.length === 0}
-                className="text-zinc-500 hover:text-zinc-200 transition-colors disabled:opacity-0"
-              >
-                <Trash2 size={14} strokeWidth={1.5} />
-              </button>
-            </div>
-
-            <div
-              className={`flex-1 overflow-y-auto relative transition-colors duration-500 ${isDraggingOver ? 'bg-[#181818]' : ''}`}
-              onDrop={onDropToSetlist}
-              onDragOver={onDragOver}
-              onDragLeave={onDragLeave}
-            >
-              {setlist.length === 0 ? (
-                <div
-                  className={`h-full min-h-[250px] flex flex-col items-center justify-center m-6 border border-dashed border-zinc-200 text-center transition-all ${
-                    isDraggingOver ? "border-black" : ""
-                  }`}
-                >
-                  <p className="text-[8px] font-bold text-zinc-300 uppercase tracking-[0.4em] mb-3">Componer lista</p>
-                  <p className="text-[11px] text-zinc-400 font-serif italic max-w-[120px] leading-relaxed">
-                    Deslice pistas desde la colección principal
-                  </p>
-                </div>
-              ) : (
-                <div className="pb-24">
-                  {setlist.map((it, idx) => {
-                    const s = catalogById.get(it.songId);
-                    return (
-                      <div
-                        key={it.uid}
-                        className="group flex items-center justify-between py-3 px-5 bg-zinc-900 border-b border-zinc-800 hover:bg-zinc-800 transition-all duration-300 rounded-[8px]"
-                      >
-                        <div className="flex items-center gap-4 overflow-hidden">
-                          <span className="text-[11px] font-bold text-zinc-500 w-3 text-right flex-shrink-0 group-hover:text-zinc-200 transition-colors font-sans">
-                            {idx + 1}
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-[13px] font-bold text-zinc-200 truncate tracking-tight leading-none mb-1 font-sans" style={{fontFamily:'var(--font-main)'}}>{s?.title || "??"}</p>
-                            <p className="text-[9px] text-zinc-500 uppercase tracking-[0.15em] font-semibold leading-none font-sans">{s?.artist || "—"}</p>
+                  <div className="pb-24">
+                    {setlist.map((it, idx) => {
+                      const s = catalogById.get(it.songId);
+                      return (
+                        <div key={it.uid} className="group flex items-center justify-between py-3 px-5 bg-[#0a0a0a] border-b border-white/[0.05] hover:bg-white/[0.03] transition-all duration-300">
+                          <div className="flex items-center gap-4 overflow-hidden">
+                            <span className="text-[9px] font-bold text-[#444] w-3 text-right flex-shrink-0">{idx+1}</span>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-[12px] font-bold text-[#e8e8ea] truncate tracking-tight mb-1 leading-none">{s?.title||"??"}</p>
+                              <p className="text-[8px] text-[#888] uppercase tracking-[0.15em] font-semibold leading-none">{s?.artist||"—"}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <button onClick={(e)=>{const r=e.currentTarget.getBoundingClientRect();setReplaceMenuConfig({id:it.uid,index:idx,top:r.bottom+8,right:window.innerWidth-r.right});}} className="p-1 text-[#444] hover:text-[#c5a059]"><RefreshCw size={12} sw={2.5}/></button>
+                            <button onClick={()=>moveItem(idx,Math.max(0,idx-1))} className="p-1 text-[#444] hover:text-[#c5a059]"><ArrowUp size={12} sw={2}/></button>
+                            <button onClick={()=>moveItem(idx,Math.min(setlist.length-1,idx+1))} className="p-1 text-[#555] hover:text-[#c5a059]"><ArrowDown size={12} sw={2}/></button>
+                            <button onClick={()=>removeItem(it.uid)} className="p-1 text-[#555] hover:text-red-400"><Trash2 size={12} sw={2}/></button>
                           </div>
                         </div>
-
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
-                          <button
-                            onClick={() => moveItem(idx, Math.max(0, idx - 1))}
-                            disabled={idx === 0}
-                            className="p-1 text-zinc-500 hover:text-zinc-200 disabled:opacity-0"
-                          >
-                            <ArrowUp size={12} strokeWidth={2} />
-                          </button>
-                          <button
-                            onClick={() => moveItem(idx, Math.min(setlist.length - 1, idx + 1))}
-                            disabled={idx === setlist.length - 1}
-                            className="p-1 text-zinc-500 hover:text-zinc-200 disabled:opacity-0"
-                          >
-                            <ArrowDown size={12} strokeWidth={2} />
-                          </button>
-                          <button onClick={() => removeItem(it.uid)} className="p-1 text-zinc-500 hover:text-zinc-200 ml-1">
-                            <Trash2 size={12} strokeWidth={2} />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              <div className="p-6 bg-[#0a0a0a] border-t border-white/[0.08] z-10 mt-auto flex gap-3">
+                <button onClick={copyToClipboard} className="flex-1 py-3 bg-white/[0.05] hover:bg-white/[0.1] text-[#e8e8ea] text-[8px] uppercase tracking-[0.3em] font-bold transition-all rounded-sm">Copiar</button>
+                <button onClick={()=>{const el=document.getElementById('booking-section');el?.scrollIntoView({behavior:'smooth'});flash("Prosiga con el presupuesto");}} className="flex-1 py-3 bg-[#c5a059] hover:bg-[#d4b46e] text-black text-[8px] uppercase tracking-[0.3em] font-bold transition-all rounded-sm">Finalizar Lista</button>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <div className="p-6 bg-transparent border-t-0 z-10 mt-auto rounded-b-[18px]">
-              {setlist.length > 0 ? (
-                <div className="flex gap-3">
-                  <button
-                    onClick={copyToClipboard}
-                    className="flex-1 py-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-[9px] uppercase tracking-[0.3em] font-bold transition-all rounded-[8px] flex items-center justify-center shadow-lg font-sans border border-zinc-800"
-                  >
-                    Copiar
-                  </button>
-                  <button
-                    onClick={() => flash("Setlist enviado con éxito")}
-                    className="flex-1 py-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-[9px] uppercase tracking-[0.3em] font-bold transition-all rounded-[8px] shadow-xl flex items-center justify-center border border-zinc-800 font-sans"
-                  >
-                    Enviar
-                  </button>
+        {/* ═══ BUDGET REQUEST FORM ═══ */}
+        <section id="booking-section" className="bg-[#0a0a0a] border border-white/[0.08] shadow-2xl shadow-black/40 p-8 md:p-16 mb-20 rounded-sm">
+          <div className="max-w-4xl mx-auto">
+            <header className="mb-20 text-center">
+              <h2 className="text-[11px] font-bold text-[#c5a059] uppercase tracking-[0.6em] mb-4">Pedir Presupuesto</h2>
+              <p className="text-2xl font-serif text-[#888] italic lowercase tracking-tight">Cuéntanos tu idea y te responderemos en menos de 24h.</p>
+            </header>
+
+            <form className="space-y-16" onSubmit={(e)=>e.preventDefault()}>
+              {/* Datos personales */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div className="border-b border-white/[0.08] pb-2">
+                  <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Nombre*</label>
+                  <input name="name" value={bookingData.name} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Su nombre..." required/>
                 </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center w-full h-32">
-                  <div className="group flex items-center justify-between py-3 px-5 bg-zinc-900 border-b border-zinc-800 rounded-[8px] w-full max-w-md">
-                    <div className="min-w-0 flex-1 text-center">
-                      <p className="text-[13px] font-bold text-zinc-700 truncate tracking-tight leading-none mb-1 font-sans">(Vacío)</p>
-                      <p className="text-[9px] text-zinc-600 uppercase tracking-[0.15em] font-semibold leading-none font-sans">Selecciona una canción</p>
+                <div className="border-b border-white/[0.08] pb-2">
+                  <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Email*</label>
+                  <div className="flex items-center gap-2">
+                    <Mail size={12} className="text-[#555]"/>
+                    <input name="email" type="email" value={bookingData.email} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="ejemplo@email.com" required/>
+                  </div>
+                </div>
+                <div className="border-b border-white/[0.08] pb-2">
+                  <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Teléfono</label>
+                  <div className="flex items-center gap-2">
+                    <Phone size={12} className="text-[#555]"/>
+                    <input name="phone" value={bookingData.phone} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="+34 ..."/>
+                  </div>
+                </div>
+              </div>
+
+              {/* Detalles del evento */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                <div className="space-y-12">
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Fecha del evento*</label>
+                    <input name="date" type="date" value={bookingData.date} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0 cursor-pointer" style={{colorScheme:'dark'}} required/>
+                  </div>
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tipo de evento*</label>
+                    <select name="eventType" value={bookingData.eventType} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0 cursor-pointer" style={{colorScheme:'dark'}} required>
+                      <option value="" style={{background:'#111'}}>Selecciona una opción</option>
+                      <option value="Boda" style={{background:'#111'}}>Boda</option>
+                      <option value="Cóctel" style={{background:'#111'}}>Cóctel</option>
+                      <option value="Evento Empresa" style={{background:'#111'}}>Evento Empresa</option>
+                      <option value="Fiesta Privada" style={{background:'#111'}}>Fiesta Privada</option>
+                    </select>
+                  </div>
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Lugar/Localidad*</label>
+                    <div className="flex items-center gap-2">
+                      <MapPin size={12} className="text-[#555]"/>
+                      <input name="location" value={bookingData.location} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Ciudad o establecimiento..." required/>
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
-          </section>
-        </div>
+                <div className="space-y-12">
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Nº Invitados</label>
+                    <div className="flex items-center gap-2">
+                      <Users size={12} className="text-[#555]"/>
+                      <input name="guests" type="number" value={bookingData.guests} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Cantidad aproximada..."/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sonido */}
+              <div className="pt-8 border-t border-white/[0.05] grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div className="space-y-10">
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">¿El lugar tiene equipo de sonido?</label>
+                    <select name="hasSoundSystem" value={bookingData.hasSoundSystem} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0 cursor-pointer" style={{colorScheme:'dark'}}>
+                      <option value="No lo sé" style={{background:'#111'}}>No lo sé</option>
+                      <option value="Sí" style={{background:'#111'}}>Sí</option>
+                      <option value="No" style={{background:'#111'}}>No</option>
+                    </select>
+                  </div>
+                  <label className="flex items-center gap-4 cursor-pointer p-4 bg-white/[0.02] hover:bg-white/[0.05] transition-colors border border-transparent hover:border-white/[0.08] rounded-sm">
+                    <input type="checkbox" name="needsOurSound" checked={bookingData.needsOurSound} onChange={handleBookingChange} className="w-4 h-4 accent-[#c5a059]"/>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest block text-[#e8e8ea]">Necesito que YourVersion sonorice el evento</span>
+                      <span className="text-[9px] text-[#888] mt-1 block leading-relaxed italic">Cuanta más info nos des, más preciso será el presupuesto técnico.</span>
+                    </div>
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <div className="p-8 border border-white/[0.08] bg-white/[0.02] relative overflow-hidden group w-full">
+                    <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-100 transition-opacity text-[#c5a059]"><Zap size={40} sw={1}/></div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3 text-[#e8e8ea]">Producción técnica</h4>
+                    <p className="text-xs text-[#888] italic font-serif leading-relaxed">Solo si sonorizamos: Comparte los datos técnicos de sonido e iluminación para ajustar el presupuesto.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Producción técnica avanzada */}
+              <div className={`space-y-12 transition-all duration-500 ${bookingData.needsOurSound?'opacity-100 scale-100':'opacity-40 grayscale pointer-events-none'}`}>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Espacio (interior/exterior)</label>
+                    <select name="spaceType" value={bookingData.spaceType} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0" style={{colorScheme:'dark'}}>
+                      <option value="" style={{background:'#111'}}>Selecciona</option><option value="Interior" style={{background:'#111'}}>Interior</option><option value="Exterior" style={{background:'#111'}}>Exterior</option><option value="Mixto" style={{background:'#111'}}>Mixto</option>
+                    </select>
+                  </div>
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tamaño del espacio</label>
+                    <input name="spaceSize" value={bookingData.spaceSize} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="m2 aprox..."/>
+                  </div>
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Público esperado</label>
+                    <input name="expectedAudience" value={bookingData.expectedAudience} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Personas en pista..."/>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                  <div className="grid grid-cols-1 gap-12">
+                    <div className="border-b border-white/[0.08] pb-2">
+                      <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tamaño del escenario</label>
+                      <input name="stageSize" value={bookingData.stageSize} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Ancho x Fondo..."/>
+                    </div>
+                    <div className="border-b border-white/[0.08] pb-2">
+                      <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Potencia de sonido deseada</label>
+                      <input name="soundPower" value={bookingData.soundPower} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Watios estimados..."/>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-12">
+                    <div className="border-b border-white/[0.08] pb-2">
+                      <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Distancia a toma de corriente</label>
+                      <input name="powerDistance" value={bookingData.powerDistance} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Metros aprox..."/>
+                    </div>
+                    <div className="border-b border-white/[0.08] pb-2">
+                      <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Potencia máxima soportada</label>
+                      <input name="maxPower" value={bookingData.maxPower} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Límite del lugar..."/>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tipo de iluminación</label>
+                    <select name="lightingType" value={bookingData.lightingType} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0" style={{colorScheme:'dark'}}>
+                      <option value="" style={{background:'#111'}}>Selecciona</option><option value="Ambiente suave" style={{background:'#111'}}>Ambiente suave</option><option value="Concierto dinámico" style={{background:'#111'}}>Concierto dinámico</option><option value="Elegante corporativo" style={{background:'#111'}}>Elegante corporativo</option><option value="No necesitamos luces" style={{background:'#111'}}>No necesitamos luces</option>
+                    </select>
+                  </div>
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Control de luces</label>
+                    <select name="lightingControl" value={bookingData.lightingControl} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0" style={{colorScheme:'dark'}}>
+                      <option value="" style={{background:'#111'}}>Selecciona</option><option value="Presets automáticos" style={{background:'#111'}}>Presets automáticos</option><option value="Necesitamos técnico de luces" style={{background:'#111'}}>Necesitamos técnico de luces</option><option value="No aplica" style={{background:'#111'}}>No aplica</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Requisitos y repertorio */}
+              <div className="space-y-12">
+                <div className="border-b border-white/[0.08] pb-2">
+                  <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Rider / requisitos técnicos</label>
+                  <textarea name="technicalRider" value={bookingData.technicalRider} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-medium text-[#aaa] focus:outline-none p-0 placeholder-[#444] resize-none h-20 leading-relaxed" placeholder="Especifique necesidades de montaje..."/>
+                </div>
+                <div className="border-b border-white/[0.08] pb-2">
+                  <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Comentarios</label>
+                  <textarea name="comments" value={bookingData.comments} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-medium text-[#aaa] focus:outline-none p-0 placeholder-[#444] resize-none h-20 leading-relaxed" placeholder="Cualquier otra información relevante..."/>
+                </div>
+                <div className="bg-white/[0.03] p-8 border border-white/[0.08]">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Music size={14} className="text-[#c5a059]"/>
+                    <label className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#888]">Repertorio elegido en la web</label>
+                  </div>
+                  <div className="text-sm font-serif italic text-[#e8e8ea] leading-relaxed">{setlist.length>0?currentRepertoireSummary:"No se ha seleccionado repertorio todavía."}</div>
+                  <p className="text-[8px] text-[#555] mt-4 uppercase tracking-widest font-bold">Resumen automático basado en su selección superior</p>
+                </div>
+              </div>
+
+              {/* Botón enviar */}
+              <div className="pt-20 flex flex-col items-center">
+                <button type="button" onClick={()=>{if(!bookingData.name||!bookingData.email||!bookingData.date){flash("Complete los campos obligatorios (*)");return;}flash("Solicitud enviada con éxito");}}
+                  className="group relative px-24 py-6 bg-[#c5a059] text-black text-[11px] uppercase tracking-[0.5em] font-bold overflow-hidden transition-all hover:bg-[#d4b46e]">
+                  <span className="relative z-10">Quiero Presupuesto</span>
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </button>
+                <div className="mt-10 flex items-center gap-2 opacity-20">
+                  <span className="h-px w-8 bg-[#c5a059]"></span>
+                  <p className="text-[8px] uppercase tracking-[0.4em] font-bold text-[#888]">YourVersion Professional Services</p>
+                  <span className="h-px w-8 bg-[#c5a059]"></span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
       </div>
     </div>
   );
 }
 
-const rootNode = document.getElementById("celListRoot");
-if (rootNode) {
-  ReactDOM.createRoot(rootNode).render(<App />);
-}
+/* ── Mount ── */
+const _root = document.getElementById('setlistAppRoot');
+if (_root) ReactDOM.createRoot(_root).render(<SetlistApp />);
