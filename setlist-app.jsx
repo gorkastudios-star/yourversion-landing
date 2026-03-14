@@ -1,5 +1,5 @@
 /* YourVersion – Setlist Builder + Booking Form (browser/CDN build) */
-const { useState, useMemo, useEffect } = React;
+const { useState, useMemo, useEffect, useRef } = React;
 
 /* ── Inline Lucide-style icon components ── */
 const I = ({ children, size = 24, sw = 2, className = "" }) => (
@@ -240,15 +240,16 @@ function SetlistApp() {
   const [setlist, setSetlist] = useState([]);
   const [toast, setToast] = useState("");
   const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [isSendingQuote, setIsSendingQuote] = useState(false);
   const [pendingPackImport, setPendingPackImport] = useState(null);
   const [replaceMenuConfig, setReplaceMenuConfig] = useState(null);
   const [hoveredPackId, setHoveredPackId] = useState(null);
 
   const [bookingData, setBookingData] = useState({
-    name: "", email: "", phone: "", date: "", eventType: "", location: "", guests: "",
+    name: "", email: "", phone: "", date: "", eventType: "", location: "", guests: "", travelDistance: 0,
     showDuration: "60 min", format: "Cóctel", hasSoundSystem: "No lo sé", needsOurSound: false,
     spaceType: "Interior", spaceSize: "", expectedAudience: "", stageSize: "", soundPower: "",
-    powerDistance: "", maxPower: "", lightingType: "", lightingControl: "", technicalRider: "", comments: ""
+    powerDistance: "", maxPower: "", lightingType: "", lightingControl: "", comments: ""
   });
 
   useEffect(() => {
@@ -349,13 +350,166 @@ function SetlistApp() {
     setBookingData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
 
+  // Google Places Autocomplete + Distance from Galdakao
+  const locationInputRef = useRef(null);
+  const autocompleteRef = useRef(null);
+
+  useEffect(() => {
+    if (autocompleteRef.current) return;
+    const init = () => {
+      if (!window.google?.maps?.places || !locationInputRef.current) return false;
+      const ac = new google.maps.places.Autocomplete(locationInputRef.current, {
+        types: ['geocode', 'establishment'],
+        componentRestrictions: { country: 'es' },
+      });
+      autocompleteRef.current = ac;
+      ac.addListener('place_changed', () => {
+        const place = ac.getPlace();
+        if (!place.geometry) return;
+        const name = place.formatted_address || place.name;
+        setBookingData(prev => ({ ...prev, location: name }));
+        const svc = new google.maps.DistanceMatrixService();
+        svc.getDistanceMatrix({
+          origins: ['Galdakao, Bizkaia, Spain'],
+          destinations: [{ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }],
+          travelMode: 'DRIVING',
+        }, (res, status) => {
+          if (status === 'OK' && res.rows[0].elements[0].status === 'OK') {
+            const kmOneWay = Math.round(res.rows[0].elements[0].distance.value / 1000);
+            setBookingData(prev => ({ ...prev, travelDistance: kmOneWay * 2 }));
+          }
+        });
+      });
+      return true;
+    };
+    if (!init()) {
+      const iv = setInterval(() => { if (init()) clearInterval(iv); }, 500);
+      return () => clearInterval(iv);
+    }
+  }, []);
+
+  const requestQuoteByEmail = async () => {
+    if (isSendingQuote) return;
+
+    const required = [
+      ["name", "Nombre"],
+      ["email", "Email"],
+      ["date", "Fecha y hora del evento"],
+      ["eventType", "Tipo de evento"],
+      ["location", "Lugar/Localidad"],
+      ["hasSoundSystem", "Necesidad de llevar equipo"],
+      ["spaceType", "Tipo de espacio"],
+      ["guests", "Nº de asistentes"],
+    ];
+
+    const missing = required.filter(([k]) => !String(bookingData[k] ?? "").trim()).map(([, label]) => label);
+    if (missing.length) {
+      flash(`Faltan datos: ${missing.join(", ")}`);
+      return;
+    }
+
+    const subject = `Solicitud presupuesto YourVersion - ${bookingData.name}`;
+    const setlistText = setlist.length > 0
+      ? setlist.map((it, i) => {
+          const ss = catalogById.get(it.songId);
+          return `${i + 1}. ${ss?.title || "??"}${ss?.artist ? " - " + ss.artist : ""}`;
+        }).join("\n")
+      : "No se ha seleccionado repertorio.";
+
+    const body = [
+      "Nueva solicitud de presupuesto desde la web:",
+      "",
+      `Nombre: ${bookingData.name}`,
+      `Email: ${bookingData.email}`,
+      `Telefono: ${bookingData.phone || "No indicado"}`,
+      `Fecha y hora: ${bookingData.date}`,
+      `Tipo de evento: ${bookingData.eventType}`,
+      `Lugar/Localidad: ${bookingData.location}`,
+      `Asistentes aprox.: ${bookingData.guests}`,
+      "",
+      `¿Necesitaremos llevar equipo?: ${bookingData.hasSoundSystem}`,
+      `Tipo de espacio: ${bookingData.spaceType}`,
+      "",
+      "Repertorio elegido:",
+      setlistText,
+      "",
+      `Comentarios: ${bookingData.comments || "Sin comentarios"}`,
+    ].join("\n");
+
+    const payload = {
+      _subject: subject,
+      _captcha: "false",
+      _template: "table",
+      nombre: bookingData.name,
+      email: bookingData.email,
+      telefono: bookingData.phone || "No indicado",
+      fecha_hora: bookingData.date,
+      tipo_evento: bookingData.eventType,
+      lugar: bookingData.location,
+      asistentes: bookingData.guests,
+      llevar_equipo: bookingData.hasSoundSystem,
+      tipo_espacio: bookingData.spaceType,
+      repertorio: setlistText,
+      comentarios: bookingData.comments || "Sin comentarios",
+      resumen: body,
+    };
+
+    try {
+      setIsSendingQuote(true);
+      const res = await fetch("https://formsubmit.co/ajax/yourversionbilbao@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      // Save lead to Firestore so it shows up in the CRM
+      try {
+        await db.collection("leads").add({
+          createdAt: new Date().toISOString(),
+          name: bookingData.name,
+          email: bookingData.email,
+          phone: bookingData.phone || "",
+          dateTime: bookingData.date,
+          eventType: bookingData.eventType,
+          location: bookingData.location,
+          guests: bookingData.guests,
+          needsEquipment: bookingData.hasSoundSystem,
+          spaceType: bookingData.spaceType,
+          comments: bookingData.comments || "",
+          setlist: setlistText,
+          status: "Nuevo",
+          durationMinutes: 90,
+          extraSongs: 0,
+          soundNeeded: bookingData.hasSoundSystem === "No" ? "No" : "Sí",
+          stayOvernight: "No",
+          attendees: Number(bookingData.guests || 0),
+          travelDistance: bookingData.travelDistance || 0,
+          total: 0,
+        });
+      } catch (fbErr) {
+        console.warn("[YourVersion] No se pudo guardar en Firestore:", fbErr);
+      }
+
+      flash("Solicitud enviada con éxito");
+    } catch (err) {
+      console.error("[YourVersion] Error enviando solicitud:", err);
+      flash("No se pudo enviar. Revisa conexión e inténtalo de nuevo");
+    } finally {
+      setIsSendingQuote(false);
+    }
+  };
+
   const currentRepertoireSummary = useMemo(() => {
     return setlist.map((it) => { const ss = catalogById.get(it.songId); return `${ss?.title||"??"}${ss?.artist?" ("+ss.artist+")":""}`; }).join(", ");
   }, [setlist, catalogById]);
 
   return (
     <div className="text-[#e8e8ea] font-sans p-4 md:p-8 lg:overflow-y-auto selection:bg-[#c5a059]/20" style={{fontFamily:"'Outfit',sans-serif"}}>
-
       {/* Modal de Importación */}
       {pendingPackImport && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -582,11 +736,11 @@ function SetlistApp() {
               </div>
 
               {/* Detalles del evento */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
-                <div className="space-y-12">
+              <div className="grid grid-cols-1 gap-y-12">
+                <div className="space-y-12 max-w-2xl">
                   <div className="border-b border-white/[0.08] pb-2">
-                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Fecha del evento*</label>
-                    <input name="date" type="date" value={bookingData.date} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0 cursor-pointer" style={{colorScheme:'dark'}} required/>
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Fecha y hora del evento*</label>
+                    <input name="date" type="datetime-local" value={bookingData.date} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0 cursor-pointer" style={{colorScheme:'dark'}} required/>
                   </div>
                   <div className="border-b border-white/[0.08] pb-2">
                     <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tipo de evento*</label>
@@ -602,17 +756,13 @@ function SetlistApp() {
                     <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Lugar/Localidad*</label>
                     <div className="flex items-center gap-2">
                       <MapPin size={12} className="text-[#555]"/>
-                      <input name="location" value={bookingData.location} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Ciudad o establecimiento..." required/>
+                      <input ref={locationInputRef} name="location" value={bookingData.location} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Ciudad o establecimiento..." required autoComplete="off" />
                     </div>
-                  </div>
-                </div>
-                <div className="space-y-12">
-                  <div className="border-b border-white/[0.08] pb-2">
-                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Nº Invitados</label>
-                    <div className="flex items-center gap-2">
-                      <Users size={12} className="text-[#555]"/>
-                      <input name="guests" type="number" value={bookingData.guests} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Cantidad aproximada..."/>
-                    </div>
+                    {bookingData.travelDistance > 0 && (
+                      <div className="mt-2 flex items-center gap-2 text-[10px]">
+                        <span className="text-amber-500/80 font-bold">↔ {bookingData.travelDistance} km ida y vuelta desde Galdakao</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -621,82 +771,38 @@ function SetlistApp() {
               <div className="pt-8 border-t border-white/[0.05] grid grid-cols-1 md:grid-cols-2 gap-16">
                 <div className="space-y-10">
                   <div className="border-b border-white/[0.08] pb-2">
-                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">¿El lugar tiene equipo de sonido?</label>
-                    <select name="hasSoundSystem" value={bookingData.hasSoundSystem} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0 cursor-pointer" style={{colorScheme:'dark'}}>
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">¿Sabéis si necesitaremos llevar nuestro equipo de sonido?</label>
+                    <select name="hasSoundSystem" value={bookingData.hasSoundSystem} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0" style={{colorScheme:'dark'}}>
                       <option value="No lo sé" style={{background:'#111'}}>No lo sé</option>
-                      <option value="Sí" style={{background:'#111'}}>Sí</option>
-                      <option value="No" style={{background:'#111'}}>No</option>
+                      <option value="Sí" style={{background:'#111'}}>Sí, lo necesitaremos</option>
+                      <option value="No" style={{background:'#111'}}>No, no hará falta</option>
                     </select>
                   </div>
-                  <label className="flex items-center gap-4 cursor-pointer p-4 bg-white/[0.02] hover:bg-white/[0.05] transition-colors border border-transparent hover:border-white/[0.08] rounded-sm">
-                    <input type="checkbox" name="needsOurSound" checked={bookingData.needsOurSound} onChange={handleBookingChange} className="w-4 h-4 accent-[#c5a059]"/>
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest block text-[#e8e8ea]">Necesito que YourVersion sonorice el evento</span>
-                      <span className="text-[9px] text-[#888] mt-1 block leading-relaxed italic">Cuanta más info nos des, más preciso será el presupuesto técnico.</span>
-                    </div>
-                  </label>
+
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tipo de espacio para el show</label>
+                    <select name="spaceType" value={bookingData.spaceType} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0" style={{colorScheme:'dark'}}>
+                      <option value="Interior" style={{background:'#111'}}>Interior</option>
+                      <option value="Exterior" style={{background:'#111'}}>Exterior</option>
+                    </select>
+                  </div>
+
+                  <div className="border-b border-white/[0.08] pb-2">
+                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">¿Cuántas personas van a asistir?</label>
+                    <input name="guests" type="number" min="0" step="1" value={bookingData.guests} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Número aproximado..."/>
+                  </div>
                 </div>
+
                 <div className="flex items-center">
                   <div className="p-8 border border-white/[0.08] bg-white/[0.02] relative overflow-hidden group w-full">
                     <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-100 transition-opacity text-[#c5a059]"><Zap size={40} sw={1}/></div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3 text-[#e8e8ea]">Producción técnica</h4>
-                    <p className="text-xs text-[#888] italic font-serif leading-relaxed">Solo si sonorizamos: Comparte los datos técnicos de sonido e iluminación para ajustar el presupuesto.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Producción técnica avanzada */}
-              <div className={`space-y-12 transition-all duration-500 ${bookingData.needsOurSound?'opacity-100 scale-100':'opacity-40 grayscale pointer-events-none'}`}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                  <div className="border-b border-white/[0.08] pb-2">
-                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Espacio (interior/exterior)</label>
-                    <select name="spaceType" value={bookingData.spaceType} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0" style={{colorScheme:'dark'}}>
-                      <option value="" style={{background:'#111'}}>Selecciona</option><option value="Interior" style={{background:'#111'}}>Interior</option><option value="Exterior" style={{background:'#111'}}>Exterior</option><option value="Mixto" style={{background:'#111'}}>Mixto</option>
-                    </select>
-                  </div>
-                  <div className="border-b border-white/[0.08] pb-2">
-                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tamaño del espacio</label>
-                    <input name="spaceSize" value={bookingData.spaceSize} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="m2 aprox..."/>
-                  </div>
-                  <div className="border-b border-white/[0.08] pb-2">
-                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Público esperado</label>
-                    <input name="expectedAudience" value={bookingData.expectedAudience} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Personas en pista..."/>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                  <div className="grid grid-cols-1 gap-12">
-                    <div className="border-b border-white/[0.08] pb-2">
-                      <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tamaño del escenario</label>
-                      <input name="stageSize" value={bookingData.stageSize} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Ancho x Fondo..."/>
-                    </div>
-                    <div className="border-b border-white/[0.08] pb-2">
-                      <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Potencia de sonido deseada</label>
-                      <input name="soundPower" value={bookingData.soundPower} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Watios estimados..."/>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 gap-12">
-                    <div className="border-b border-white/[0.08] pb-2">
-                      <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Distancia a toma de corriente</label>
-                      <input name="powerDistance" value={bookingData.powerDistance} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Metros aprox..."/>
-                    </div>
-                    <div className="border-b border-white/[0.08] pb-2">
-                      <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Potencia máxima soportada</label>
-                      <input name="maxPower" value={bookingData.maxPower} onChange={handleBookingChange} className="w-full bg-transparent border-none text-base font-serif italic text-[#e8e8ea] focus:outline-none p-0 placeholder-[#444]" placeholder="Límite del lugar..."/>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                  <div className="border-b border-white/[0.08] pb-2">
-                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Tipo de iluminación</label>
-                    <select name="lightingType" value={bookingData.lightingType} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0" style={{colorScheme:'dark'}}>
-                      <option value="" style={{background:'#111'}}>Selecciona</option><option value="Ambiente suave" style={{background:'#111'}}>Ambiente suave</option><option value="Concierto dinámico" style={{background:'#111'}}>Concierto dinámico</option><option value="Elegante corporativo" style={{background:'#111'}}>Elegante corporativo</option><option value="No necesitamos luces" style={{background:'#111'}}>No necesitamos luces</option>
-                    </select>
-                  </div>
-                  <div className="border-b border-white/[0.08] pb-2">
-                    <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Control de luces</label>
-                    <select name="lightingControl" value={bookingData.lightingControl} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-bold text-[#e8e8ea] focus:outline-none p-0" style={{colorScheme:'dark'}}>
-                      <option value="" style={{background:'#111'}}>Selecciona</option><option value="Presets automáticos" style={{background:'#111'}}>Presets automáticos</option><option value="Necesitamos técnico de luces" style={{background:'#111'}}>Necesitamos técnico de luces</option><option value="No aplica" style={{background:'#111'}}>No aplica</option>
-                    </select>
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3 text-[#e8e8ea]">Equipo de sonido propio</h4>
+                    <p className="text-xs text-[#888] italic font-serif leading-relaxed">Trabajamos con un sistema de 800 W de potencia.</p>
+                    <ul className="mt-4 space-y-2 text-[10px] uppercase tracking-[0.15em] font-bold text-[#aaa]">
+                      <li>Interiores: hasta 150 personas</li>
+                      <li>Exteriores: hasta 100 personas</li>
+                    </ul>
+                    <p className="mt-4 text-[9px] text-[#666] leading-relaxed">Indicad arriba si necesitaremos llevar este equipo y os enviaremos el presupuesto ajustado.</p>
                   </div>
                 </div>
               </div>
@@ -704,28 +810,40 @@ function SetlistApp() {
               {/* Requisitos y repertorio */}
               <div className="space-y-12">
                 <div className="border-b border-white/[0.08] pb-2">
-                  <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Rider / requisitos técnicos</label>
-                  <textarea name="technicalRider" value={bookingData.technicalRider} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-medium text-[#aaa] focus:outline-none p-0 placeholder-[#444] resize-none h-20 leading-relaxed" placeholder="Especifique necesidades de montaje..."/>
-                </div>
-                <div className="border-b border-white/[0.08] pb-2">
                   <label className="block text-[9px] uppercase tracking-widest font-bold text-[#888] mb-3">Comentarios</label>
                   <textarea name="comments" value={bookingData.comments} onChange={handleBookingChange} className="w-full bg-transparent border-none text-xs font-medium text-[#aaa] focus:outline-none p-0 placeholder-[#444] resize-none h-20 leading-relaxed" placeholder="Cualquier otra información relevante..."/>
                 </div>
-                <div className="bg-white/[0.03] p-8 border border-white/[0.08]">
-                  <div className="flex items-center gap-3 mb-4">
+                <div className="bg-white/[0.02] p-8 border border-white/[0.06] rounded-sm">
+                  <div className="flex items-center gap-3 mb-6">
                     <Music size={14} className="text-[#c5a059]"/>
                     <label className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#888]">Repertorio elegido en la web</label>
+                    {setlist.length > 0 && <span className="ml-auto text-[9px] font-bold text-[#c5a059]/60 tabular-nums">{setlist.length} {setlist.length===1?"tema":"temas"}</span>}
                   </div>
-                  <div className="text-sm font-serif italic text-[#e8e8ea] leading-relaxed">{setlist.length>0?currentRepertoireSummary:"No se ha seleccionado repertorio todavía."}</div>
-                  <p className="text-[8px] text-[#555] mt-4 uppercase tracking-widest font-bold">Resumen automático basado en su selección superior</p>
+                  {setlist.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {setlist.map((it, i) => {
+                        const ss = catalogById.get(it.songId);
+                        return (
+                          <div key={i} className="group flex items-center gap-2 px-3 py-2 bg-white/[0.04] border border-white/[0.07] rounded-sm hover:border-[#c5a059]/30 hover:bg-[#c5a059]/[0.04] transition-all duration-300">
+                            <span className="text-[10px] font-bold text-[#c5a059]/40 tabular-nums w-4 text-right">{i+1}</span>
+                            <span className="text-xs font-medium text-[#e8e8ea]">{ss?.title || "??"}</span>
+                            {ss?.artist && <span className="text-[10px] text-[#666] font-medium">{ss.artist}</span>}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-sm font-serif italic text-[#555]">No se ha seleccionado repertorio todavía.</p>
+                  )}
+                  <p className="text-[8px] text-[#444] mt-6 uppercase tracking-widest font-bold">Resumen automático basado en su selección superior</p>
                 </div>
               </div>
 
               {/* Botón enviar */}
               <div className="pt-20 flex flex-col items-center">
-                <button type="button" onClick={()=>{if(!bookingData.name||!bookingData.email||!bookingData.date){flash("Complete los campos obligatorios (*)");return;}flash("Solicitud enviada con éxito");}}
-                  className="group relative px-24 py-6 bg-[#c5a059] text-black text-[11px] uppercase tracking-[0.5em] font-bold overflow-hidden transition-all hover:bg-[#d4b46e]">
-                  <span className="relative z-10">Quiero Presupuesto</span>
+                <button type="button" onClick={requestQuoteByEmail} disabled={isSendingQuote}
+                  className="group relative px-24 py-6 bg-[#c5a059] text-black text-[11px] uppercase tracking-[0.5em] font-bold overflow-hidden transition-all hover:bg-[#d4b46e] disabled:opacity-60 disabled:cursor-not-allowed">
+                  <span className="relative z-10">{isSendingQuote ? "Enviando..." : "Quiero Presupuesto"}</span>
                   <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </button>
                 <div className="mt-10 flex items-center gap-2 opacity-20">
